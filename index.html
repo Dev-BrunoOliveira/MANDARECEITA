@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Manda Receita</title>
+    <link rel="stylesheet" href="style_index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="background-section">
+        <div class="welcome-text">
+          <h1>Descubra e compartilhe <br />suas receitas favoritas</h1>
+          <p>Entre para um mundo de sabores!</p>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-box">
+          <div class="logo-container">
+            <h2>Manda Receita</h2>
+          </div>
+          <h3>Bem-vindo(a) de volta!</h3>
+
+          <form id="loginForm">
+            <div class="input-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Seu email"
+                required
+              />
+            </div>
+            <div class="input-group">
+              <label for="password">Senha</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Sua senha"
+                required
+              />
+              <span
+                class="toggle-password"
+                onclick="togglePasswordVisibility()"
+              >
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+            <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+            <button type="submit" class="btn btn-login">Entrar</button>
+          </form>
+
+          <div class="separator">OU</div>
+
+          <button type="button" class="btn btn-google">
+            <i class="fab fa-google"></i> Continuar com o Google
+          </button>
+          <div class="terms">
+            Ao continuar, você concorda com os
+            <a href="#">Termos de Serviço</a> do Manda Receita e confirma que
+            leu nossa <a href="#">Política de Privacidade</a>.
+          </div>
+
+          <hr class="form-divider" />
+
+         <div class="signup-link">
+    Ainda não está no Manda Receita? <a href="./register.html">Crie uma conta</a>
+</div>
+    </div>
+
+    <script src="script_index.js"></script>
+  </body>
+</html>

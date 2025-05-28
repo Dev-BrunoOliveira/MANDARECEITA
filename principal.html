@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manda Receita</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="page-container">
+      <header>
+        <h1>Manda Receita</h1>
+      </header>
+
+      <main>
+        <section class="formulario-receita">
+          <h2>Adicionar Nova Receita</h2>
+          <form id="formNovaReceita">
+            <div class="form-group">
+              <label for="tituloReceita">Título da Receita</label>
+              <input
+                type="text"
+                id="tituloReceita"
+                name="tituloReceita"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="categoriaReceita">Selecione a Categoria</label>
+              <select id="categoriaReceita" name="categoriaReceita">
+                <option value="salgados">Salgados</option>
+                <option value="bolos">Doces</option>
+                <option value="carnes">Entradas & Petiscos</option>
+                <option value="sobremesas">Sobremesas</option>
+                <option value="prato-principal">Prato Principal</option>
+                <option value="acompanhamentos">Acompanhamentos</option>
+                <option value="caldos">Caldos & Sopa</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="ingredientesReceita"
+                >Ingredientes e Modo de Preparo</label
+              >
+              <textarea
+                id="ingredientesReceita"
+                name="ingredientesReceita"
+                rows="6"
+                placeholder="Digite aqui sua Receita"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="fotoVideoReceita">Selecione Foto</label>
+              <input
+                type="file"
+                id="fotoVideoReceita"
+                name="fotoVideoReceita"
+                accept="image/*,video/*"
+              />
+              <img
+                id="previewImagem"
+                src="#"
+                alt="Preview da Imagem"
+                style="display: none; max-width: 200px; margin-top: 10px"
+              />
+            </div>
+
+            <button type="submit" class="btn-enviar">Envie a Receita</button>
+          </form>
+        </section>
+
+        <section class="feed-receitas">
+          <h2>Receitas Recentes</h2>
+          <div id="containerReceitas" class="container-receitas"></div>
+        </section>
+      </main>
+
+      <footer>
+        <p>&copy; 2025 Manda Receita. Todos os direitos reservados.</p>
+      </footer>
+    </div>
+
+    <script src="principal.js"></script>
+  </body>
+</html>
