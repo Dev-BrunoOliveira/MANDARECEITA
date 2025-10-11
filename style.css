@@ -1,201 +1,285 @@
-html {
-    height: 100%; 
+:root {
+  --cor-principal: #a66321;
+  --cor-principal-hover: #8c5218;
+  --cor-fundo: #f0f2f5;
+  --cor-branco: #ffffff;
+  --cor-texto-principal: #333333;
+  --cor-texto-secundario: #65676b;
+  --cor-borda-suave: #ced0d4;
+  --sombra-padrao: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-    display: flex; 
-    flex-direction: column; 
-    min-height: 100vh; 
-}
-
-.page-container { 
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  margin: 0;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-principal);
 }
 
 header {
-    background-color: #a55f25; 
-    color: white;
-    padding: 1em 0;
-    text-align: center;
+  background-color: var(--cor-branco);
+  color: var(--cor-principal);
+  padding: 0 2em;
+  text-align: center;
+  box-shadow: var(--sombra-padrao);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8em;
 }
 
 main {
-    flex-grow: 1; 
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 20px;
-    width: 100%;
-    box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  gap: 30px;
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 0 20px;
 }
 
-.formulario-receita, .feed-receitas {
-    background-color: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.main-feed {
+  max-width: 700px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.formulario-receita h2, .feed-receitas h2 {
-    color: #a55f25;
-    margin-top: 0;
-    border-bottom: 2px solid #a55f25;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+.sidebar {
+  background-color: var(--cor-branco);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--sombra-padrao);
+  height: fit-content;
+  position: sticky;
+  top: 90px;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+  color: var(--cor-principal);
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 12px 10px;
+  text-decoration: none;
+  color: var(--cor-texto-secundario);
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.sidebar ul li a:hover {
+  background-color: var(--cor-fundo);
+}
+
+.formulario-receita {
+  background-color: var(--cor-branco);
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: var(--sombra-padrao);
+}
+
+.formulario-receita {
+  background-color: var(--cor-branco);
+  padding: 25px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: var(--sombra-padrao);
+}
+
+.formulario-receita h2 {
+  color: var(--cor-principal);
+  margin-top: 0;
+  font-size: 1.8em;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #444;
 }
 
 .form-group input[type="text"],
 .form-group select,
 .form-group textarea {
-    width: calc(100% - 22px); 
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--cor-principal);
+  box-shadow: 0 0 0 3px rgba(166, 99, 33, 0.25);
 }
 
 .form-group textarea {
-    resize: vertical;
+  resize: vertical;
+  min-height: 200px;
 }
-
-.form-group input[type="file"] {
-    padding: 10px 0;
-}
-
-#previewImagem {
-    display: none;
-    max-width: 100%; 
-    height: auto;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    padding: 5px;
-}
-
 
 .btn-enviar {
-    background-color: #a55f25;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+  background-color: var(--cor-principal);
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  letter-spacing: 0.5px;
 }
 
 .btn-enviar:hover {
-    background-color: #a55f25;
+  background-color: var(--cor-principal-hover);
+}
+
+.feed-receitas h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: var(--cor-texto-principal);
 }
 
 .container-receitas {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .card-receita {
-    background-color: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    display: flex;
-    flex-direction: column;
+  background-color: var(--cor-branco);
+  border-radius: 8px;
+  box-shadow: var(--sombra-padrao);
+  overflow: hidden;
 }
 
-.card-receita:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+.card-user-info {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+.card-user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+.card-user-info .username {
+  font-weight: bold;
+  color: var(--cor-texto-principal);
 }
 
-.card-receita img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+.card-receita > img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+}
+.card-content .recipe-details {
+  max-height: 100px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.5s ease-in-out;
 }
 
-.card-receita h3 {
-    font-size: 1.4em;
-    margin: 15px 15px 10px 15px;
-    color: #333;
+.card-content .recipe-details.expanded {
+  max-height: 1000px;
 }
 
-.card-receita .categoria { 
-    font-size: 0.9em;
-    margin: 0 15px 10px;
-    color: #666;
+.card-content .recipe-details p {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  line-height: 1.7;
+  color: #444;
+  white-space: pre-wrap;
 }
 
-.recipe-details {
-    padding: 0 15px 15px 15px;
-    display: none; 
-    max-height: 0; 
-    overflow: hidden;
-    transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; 
+.card-content .recipe-details::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(to top, var(--cor-branco), transparent);
+  transition: opacity 0.3s ease;
 }
 
-.recipe-details.visible {
-    display: block; 
-    max-height: 1000px; 
-    padding: 15px; 
+.card-content .recipe-details.expanded::after {
+  opacity: 0;
 }
 
-.recipe-details h4 {
-    margin-top: 0;
-    margin-bottom: 8px;
-    color: #555;
-    font-size: 1em;
+.toggle-recipe-link {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: var(--cor-principal);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
-.recipe-details p {
-    font-size: 0.95em;
-    line-height: 1.5;
-    color: #444;
-    white-space: pre-wrap; 
-    margin-bottom: 0;
+.toggle-recipe-link:hover {
+  color: var(--cor-principal-hover);
 }
 
-.card-receita .toggle-details-link { 
-    display: block;
-    background-color: #f0f0f0;
-    color: #3f220b;
-    text-align: center;
-    padding: 10px 15px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: auto; 
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+@media (max-width: 1200px) {
+  main {
+    grid-template-columns: 250px 1fr;
+  }
+  .sidebar-right {
+    display: none;
+  }
 }
 
-.card-receita .toggle-details-link:hover {
-    background-color: #e0e0e0;
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #000000;
-    color: white;
-    width: 100%; 
-    box-sizing: border-box;
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  header {
+    padding: 0 1em;
+  }
 }

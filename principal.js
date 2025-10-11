@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const fotoVideoReceitaInput = document.getElementById("fotoVideoReceita");
   const previewImagem = document.getElementById("previewImagem");
 
-  console.log("Iniciando script principal.js e carregando receitas..."); 
+  console.log("Iniciando script principal.js e carregando receitas...");
   carregarReceitas();
 
   fotoVideoReceitaInput.addEventListener("change", function () {
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       previewImagem.src = "#";
       previewImagem.style.display = "none";
-      if (file && !file.type.startsWith("image/")) {
+      if (file) {
         alert("Preview disponível apenas para imagens.");
       }
     }
@@ -27,178 +27,114 @@ document.addEventListener("DOMContentLoaded", () => {
 
   formNovaReceita.addEventListener("submit", function (event) {
     event.preventDefault();
-    console.log("Formulário de nova receita submetido."); 
 
+    const nomeChef = document.getElementById("nomeChef").value;
     const titulo = document.getElementById("tituloReceita").value;
     const categoria = document.getElementById("categoriaReceita").value;
-    const ingredientes = document.getElementById("ingredientesReceita").value;
+    const ingredientes = document.getElementById("ingredientes").value;
+    const modoPreparo = document.getElementById("modoPreparo").value;
     const imagemFile = fotoVideoReceitaInput.files[0];
 
     let imagemParaSalvar =
-      "https://via.placeholder.com/300x200.png?text=Receita";
+      "https://via.placeholder.com/600x400.png?text=Receita+sem+foto";
 
     if (imagemFile && previewImagem.src.startsWith("data:image")) {
-      imagemParaSalvar = previewImagem.src;
-    } else if (
-      !imagemFile &&
-      previewImagem.style.display !== "none" &&
-      previewImagem.src.startsWith("data:image")
-    ) {
       imagemParaSalvar = previewImagem.src;
     }
 
     const novaReceita = {
       id: Date.now(),
+      nomeChef: nomeChef,
       titulo: titulo,
       categoria: categoria,
       ingredientes: ingredientes,
+      modoPreparo: modoPreparo,
       imagemUrl: imagemParaSalvar,
     };
 
-    console.log("Objeto novaReceita pronto para adicionar e salvar:", novaReceita);
+    console.log("Objeto novaReceita pronto:", novaReceita);
     adicionarReceitaAoFeed(novaReceita);
     salvarReceita(novaReceita);
 
     formNovaReceita.reset();
     previewImagem.style.display = "none";
     previewImagem.src = "#";
-    console.log("Formulário resetado após submissão."); 
   });
 
   function adicionarReceitaAoFeed(receita) {
-    console.log("Adicionando receita ao feed (DOM):", receita.titulo); 
+    console.log("Adicionando ao feed:", receita.titulo);
+
     const cardReceita = document.createElement("div");
     cardReceita.classList.add("card-receita");
     cardReceita.dataset.id = receita.id;
 
-    const img = document.createElement("img");
-    img.src = receita.imagemUrl;
-    img.alt = receita.titulo;
+    cardReceita.innerHTML = `
+      <div class="card-user-info">
+        <img src="https://i.pravatar.cc/40?u=${receita.id}" alt="Avatar">
+        <span class="username">${receita.nomeChef || "Chef Anônimo"}</span>
+      </div>
+      <img src="${receita.imagemUrl}" alt="${receita.titulo}">
+      <div class="card-content">
+        <h3>${receita.titulo}</h3>
+        <p class="categoria">${formatarCategoria(receita.categoria)}</p>
+        
+        <div class="recipe-details">
+          <div class="recipe-section recipe-ingredients">
+            <h4>Ingredientes</h4>
+            <p>${receita.ingredientes}</p>
+          </div>
+          <div class="recipe-section recipe-preparation">
+            <h4>Modo de Preparo</h4>
+            <p>${receita.modoPreparo || "Não informado."}</p> 
+          </div>
+        </div>
+        <a class="toggle-recipe-link">Veja a receita completa</a>
 
-    const h3 = document.createElement("h3");
-    h3.textContent = receita.titulo;
+      </div>
+      <div class="card-actions">
+        <button>👍 Curtir</button>
+        <button>💬 Comentar</button>
+      </div>
+    `;
 
-    const pCategoria = document.createElement("p");
-    pCategoria.classList.add("categoria");
-    pCategoria.textContent = `Categoria: ${formatarCategoria(
-      receita.categoria
-    )}`;
-
-    const detailsDiv = document.createElement("div");
-    detailsDiv.classList.add("recipe-details");
-
-    const detailsTitle = document.createElement("h4");
-    detailsTitle.textContent = "Ingredientes e Modo de Preparo:";
-    const detailsText = document.createElement("p");
-    detailsText.textContent = receita.ingredientes;
-
-    detailsDiv.appendChild(detailsTitle);
-    detailsDiv.appendChild(detailsText);
-
-    const toggleLink = document.createElement("a");
-    toggleLink.href = "#";
-    toggleLink.classList.add("toggle-details-link");
-    toggleLink.textContent = "Veja a receita completa";
+    const toggleLink = cardReceita.querySelector(".toggle-recipe-link");
+    const recipeDetails = cardReceita.querySelector(".recipe-details");
 
     toggleLink.addEventListener("click", (e) => {
       e.preventDefault();
-      detailsDiv.classList.toggle("visible");
-
-      if (detailsDiv.classList.contains("visible")) {
-        toggleLink.textContent = "Fechar receita";
+      recipeDetails.classList.toggle("expanded");
+      if (recipeDetails.classList.contains("expanded")) {
+        toggleLink.textContent = "Ocultar receita";
       } else {
         toggleLink.textContent = "Veja a receita completa";
       }
     });
-
-    cardReceita.appendChild(img);
-    cardReceita.appendChild(h3);
-    cardReceita.appendChild(pCategoria);
-    cardReceita.appendChild(detailsDiv);
-    cardReceita.appendChild(toggleLink);
 
     containerReceitas.prepend(cardReceita);
   }
 
   function formatarCategoria(categoriaValue) {
     if (!categoriaValue) return "";
-    return categoriaValue.charAt(0).toUpperCase() + categoriaValue.slice(1);
+    let texto = categoriaValue.replace(/-/g, " ");
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 
   function salvarReceita(receita) {
-    console.log("Função salvarReceita chamada com:", receita);
-    let receitasStorage;
-    try {
-        
-        const item = localStorage.getItem("receitas");
-        receitasStorage = item ? JSON.parse(item) : [];
-        
-        if (!Array.isArray(receitasStorage)) {
-            console.warn("Conteúdo de 'receitas' no localStorage não era um array. Resetando.");
-            receitasStorage = [];
-        }
-    } catch (error) {
-        console.error("Erro ao parsear 'receitas' do localStorage:", error);
-        console.warn("Resetando 'receitas' para um array vazio devido ao erro de parse.");
-        receitasStorage = [];
-    }
-
-    console.log("Antes de salvar - Receitas atuais do storage:", JSON.parse(JSON.stringify(receitasStorage)));
-    receitasStorage.unshift(receita); // Adiciona a nova receita no início do array
-    try {
-        localStorage.setItem("receitas", JSON.stringify(receitasStorage));
-        console.log("Depois de salvar - localStorage('receitas'):", localStorage.getItem("receitas"));
-    } catch (e) {
-        console.error("Erro ao salvar no localStorage (possivelmente cota excedida):", e);
-        alert("Erro ao salvar a receita! O armazenamento local pode estar cheio ou indisponível.");
-    }
+    let receitasStorage = JSON.parse(localStorage.getItem("receitas")) || [];
+    receitasStorage.unshift(receita);
+    localStorage.setItem("receitas", JSON.stringify(receitasStorage));
+    console.log("Receita salva no localStorage.");
   }
 
   function carregarReceitas() {
-    console.log("Função carregarReceitas chamada.");
-    const receitasSalvas = localStorage.getItem("receitas");
-    console.log("Conteúdo bruto do localStorage('receitas') ao carregar:", receitasSalvas);
-
-    let receitas = [];
-    if (receitasSalvas) {
-        try {
-            receitas = JSON.parse(receitasSalvas);
-            
-            if (!Array.isArray(receitas)) {
-                console.warn("Conteúdo de 'receitas' no localStorage não era um array após parse. Carregando como vazio.");
-                receitas = [];
-            }
-        } catch (error) {
-            console.error("Erro ao parsear 'receitas' do localStorage ao carregar:", error);
-            console.warn("Carregando lista de receitas como vazia devido ao erro de parse.");
-            receitas = []; 
-        }
-    }
-    
-    console.log("Receitas carregadas e parseadas:", receitas);
-
-    
-    
-    if (containerReceitas) { 
-        containerReceitas.innerHTML = '';
-    } else {
-        console.error("Elemento 'containerReceitas' não encontrado no DOM ao tentar limpar.");
-        return; 
-    }
-
-
-    if (Array.isArray(receitas)) { 
-        receitas.forEach((receita) => {
-            
-            if (receita && typeof receita.titulo !== 'undefined') {
-                adicionarReceitaAoFeed(receita);
-            } else {
-                console.warn("Item inválido encontrado nas receitas carregadas:", receita);
-            }
-        });
-    } else {
-        console.error("'receitas' não é um array após carregar e parsear. Não é possível iterar.");
-    }
+    const receitasSalvas = JSON.parse(localStorage.getItem("receitas")) || [];
+    console.log("Receitas carregadas:", receitasSalvas);
+    containerReceitas.innerHTML = "";
+    receitasSalvas.forEach((receita) => {
+      if (receita && receita.titulo) {
+        adicionarReceitaAoFeed(receita);
+      }
+    });
     console.log("Carregamento de receitas concluído.");
   }
 });

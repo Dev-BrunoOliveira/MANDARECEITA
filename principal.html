@@ -4,15 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manda Receita</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="page-container">
-      <header>
-        <h1>Manda Receita</h1>
-      </header>
+    <header>
+      <h1>Manda Receita</h1>
+    </header>
 
-      <main>
+    <main>
+      <aside class="sidebar sidebar-left">
+        <h3>Navegação</h3>
+        <ul>
+          <li><a href="#">Página Inicial</a></li>
+          <li><a href="#">Salgados</a></li>
+          <li><a href="#">Doces</a></li>
+          <li><a href="#">Entradas & Petiscos</a></li>
+          <li><a href="#">Sobremesas</a></li>
+          <li><a href="#">Meu Perfil</a></li>
+        </ul>
+      </aside>
+
+      <div class="main-feed">
         <section class="formulario-receita">
           <h2>Adicionar Nova Receita</h2>
           <form id="formNovaReceita">
@@ -27,27 +39,47 @@
             </div>
 
             <div class="form-group">
+              <label for="nomeChef">Seu Nome</label>
+              <input
+                type="text"
+                id="nomeChef"
+                name="nomeChef"
+                placeholder="Ex: Ana Maria"
+                required
+              />
+            </div>
+
+            <div class="form-group">
               <label for="categoriaReceita">Selecione a Categoria</label>
               <select id="categoriaReceita" name="categoriaReceita">
                 <option value="salgados">Salgados</option>
-                <option value="bolos">Doces</option>
-                <option value="carnes">Entradas & Petiscos</option>
+                <option value="doces">Doces</option>
+                <option value="entradas">Entradas & Petiscos</option>
                 <option value="sobremesas">Sobremesas</option>
                 <option value="prato-principal">Prato Principal</option>
                 <option value="acompanhamentos">Acompanhamentos</option>
-                <option value="caldos">Caldos & Sopa</option>
+                <option value="caldos">Caldos & Sopas</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label for="ingredientesReceita"
-                >Ingredientes e Modo de Preparo</label
-              >
+              <label for="ingredientes">Ingredientes</label>
               <textarea
-                id="ingredientesReceita"
-                name="ingredientesReceita"
+                id="ingredientes"
+                name="ingredientes"
                 rows="6"
-                placeholder="Digite aqui sua Receita"
+                placeholder="Ex:&#10;- 1 xícara de farinha&#10;- 2 ovos&#10;- 1/2 xícara de açúcar"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="modoPreparo">Modo de Preparo</label>
+              <textarea
+                id="modoPreparo"
+                name="modoPreparo"
+                rows="8"
+                placeholder="Ex:&#10;1. Misture os ingredientes secos.&#10;2. Adicione os ovos e o leite.&#10;3. Asse por 40 minutos."
                 required
               ></textarea>
             </div>
@@ -58,7 +90,7 @@
                 type="file"
                 id="fotoVideoReceita"
                 name="fotoVideoReceita"
-                accept="image/*,video/*"
+                accept="image/*"
               />
               <img
                 id="previewImagem"
@@ -74,14 +106,52 @@
 
         <section class="feed-receitas">
           <h2>Receitas Recentes</h2>
-          <div id="containerReceitas" class="container-receitas"></div>
+          <div id="containerReceitas" class="container-receitas">
+            <div class="card-receita">
+              <div class="card-user-info">
+                <img src="https://i.pravatar.cc/40" alt="Avatar" />
+                <span class="username">Chef Jacquin</span>
+              </div>
+              <img
+                src="https://images.pexels.com/photos/2105104/pexels-photo-2105104.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="Pudim de Leite"
+              />
+              <div class="card-content">
+                <h3>Pudim de Leite Perfeito</h3>
+                <p class="categoria">Doces</p>
+                <div class="recipe-details">
+                    <div class="recipe-section recipe-ingredients">
+                        <h4>Ingredientes</h4>
+                        <p>- 1 lata de leite condensado<br>- 1 lata de leite<br>- 3 ovos inteiros</p>
+                    </div>
+                    <div class="recipe-section recipe-preparation">
+                        <h4>Modo de Preparo</h4>
+                        <p>1. Bata tudo no liquidificador.<br>2. Despeje em forma caramelizada.<br>3. Asse em banho-maria.</p>
+                    </div>
+                </div>
+                <a class="toggle-recipe-link">Veja a receita completa</a>
+              </div>
+              <div class="card-actions">
+                <button>👍 Curtir</button>
+                <button>💬 Comentar</button>
+              </div>
+            </div>
+          </div>
         </section>
-      </main>
+      </div>
 
-      <footer>
-        <p>&copy; 2025 Manda Receita. Todos os direitos reservados.</p>
-      </footer>
-    </div>
+      <aside class="sidebar sidebar-right">
+        <h3>Receitas em Alta</h3>
+        <ul>
+          <li><a href="#">Bolo de Chocolate</a></li>
+          <li><a href="#">Pipoca Gourmet</a></li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Manda Receita. Todos os direitos reservados.</p>
+    </footer>
 
     <script src="principal.js"></script>
   </body>
