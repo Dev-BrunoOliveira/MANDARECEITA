@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import './Home.css';
+import CardReceita from '../components/CardReceita'; // 1. Importando o componente novo
+
+interface Receita {
+  id: number;
+  chef: string;
+  titulo: string;
+  categoria: string;
+  imagem: string;
+  ingredientes: string;
+  preparo: string;
+}
 
 const Home = () => {
-  // Estado para armazenar as receitas (começa com o Pudim do Jacquin)
-  const [receitas, setReceitas] = useState([
+  const [receitas, setReceitas] = useState<Receita[]>([
     {
       id: 1,
       chef: "Chef Jacquin",
@@ -14,6 +24,13 @@ const Home = () => {
       preparo: "1. Bata tudo no liquidificador. 2. Despeje em forma caramelizada. 3. Asse em banho-maria."
     }
   ]);
+
+  // Função para lidar com o envio do formulário (Lógica de ADS)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert("Receita enviada com sucesso! (Lógica de salvamento em breve)");
+    // Aqui depois faremos a função para dar o setReceitas([...receitas, novaReceita])
+  };
 
   return (
     <div className="home-container">
@@ -36,14 +53,14 @@ const Home = () => {
           {/* Formulário de Nova Receita */}
           <section className="formulario-receita">
             <h2>Adicionar Nova Receita</h2>
-            <form id="formNovaReceita">
+            <form id="formNovaReceita" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Título da Receita</label>
-                <input type="text" required />
+                <input type="text" placeholder="Ex: Bolo de Fubá" required />
               </div>
               <div className="form-group">
                 <label>Seu Nome</label>
-                <input type="text" placeholder="Ex: Ana Maria" required />
+                <input type="text" placeholder="Ex: Bruno Oliveira" required />
               </div>
               <div className="form-group">
                 <label>Selecione a Categoria</label>
@@ -55,11 +72,11 @@ const Home = () => {
               </div>
               <div className="form-group">
                 <label>Ingredientes</label>
-                <textarea rows="4" required></textarea>
+                <textarea rows={4} placeholder="Liste os ingredientes..." required></textarea>
               </div>
               <div className="form-group">
                 <label>Modo de Preparo</label>
-                <textarea rows="4" required></textarea>
+                <textarea rows={4} placeholder="Passo a passo..." required></textarea>
               </div>
               <button type="submit" className="btn-enviar">Envie a Receita</button>
             </form>
@@ -69,23 +86,18 @@ const Home = () => {
           <section className="feed-receitas">
             <h2>Receitas Recentes</h2>
             <div className="container-receitas">
+              {/* 2. Renderizando o componente CardReceita para cada item da lista */}
               {receitas.map((rec) => (
-                <div key={rec.id} className="card-receita">
-                  <div className="card-user-info">
-                    <img src="https://i.pravatar.cc/40" alt="Avatar" />
-                    <span className="username">{rec.chef}</span>
-                  </div>
-                  <img src={rec.imagem} alt={rec.titulo} />
-                  <div className="card-content">
-                    <h3>{rec.titulo}</h3>
-                    <p className="categoria">{rec.categoria}</p>
-                    <button className="toggle-recipe-link">Veja a receita completa</button>
-                  </div>
-                  <div className="card-actions">
-                    <button>👍 Curtir</button>
-                    <button>💬 Comentar</button>
-                  </div>
-                </div>
+                <CardReceita 
+                  key={rec.id} 
+                  id={rec.id}
+                  chef={rec.chef}
+                  titulo={rec.titulo}
+                  categoria={rec.categoria}
+                  imagem={rec.imagem}
+                  ingredientes={rec.ingredientes}
+                  preparo={rec.preparo}
+                />
               ))}
             </div>
           </section>
