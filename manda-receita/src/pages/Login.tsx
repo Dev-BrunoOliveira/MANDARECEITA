@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
-import './Login.css'; // Vamos colocar seu CSS aqui
+import { useNavigate, Link } from 'react-router-dom'; // 1. Importando as ferramentas de navegação
+import './Login.css';
 
 const Login = () => {
+  const navigate = useNavigate(); // 2. Inicializando a função de navegação
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => setShowPassword(!showPassword);
+
+  // 3. Função que lida com o clique no botão Entrar
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // Impede o refresh da página
+    // Aqui você faria a validação. Por enquanto, vamos direto para a Home:
+    navigate('/principal');
+  };
 
   return (
     <div className="login-container">
@@ -22,7 +31,8 @@ const Login = () => {
           </div>
           <h3>Bem-vindo(a) de volta!</h3>
 
-          <form id="loginForm">
+          {/* 4. Conectando a função ao formulário */}
+          <form id="loginForm" onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="email">Email</label>
               <input
@@ -63,7 +73,8 @@ const Login = () => {
           <hr className="form-divider" />
 
           <div className="signup-link">
-            Ainda não está no Manda Receita? <a href="/register">Crie uma conta</a>
+            {/* 5. Usando Link para o cadastro ser instantâneo */}
+            Ainda não está no Manda Receita? <Link to="/register">Crie uma conta</Link>
           </div>
         </div>
       </div>
