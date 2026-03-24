@@ -1,0 +1,26 @@
+.terms-register {
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 0.8em;
+    display: flex;
+    align-items: center;
+}
+
+.terms-register input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.terms-register .checkbox-label { 
+    font-weight: normal;
+    font-size: 1em; 
+    color: #555;
+}
+
+.terms-register a {
+    color: #0073b1;
+    text-decoration: none;
+}
+
+.terms-register a:hover {
+    text-decoration: underline;
+}

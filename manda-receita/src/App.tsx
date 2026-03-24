@@ -1,12 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login"; // REMOVA o .tsx daqui, o Vite já entende
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        {/* Adicione outras rotas aqui depois */}
+        <Route path="/register" element={<Register />} />
+        <Route path="/principal" element={<Home />} />
       </Routes>
     </Router>
   );
