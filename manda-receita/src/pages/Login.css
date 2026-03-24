@@ -11,14 +11,14 @@ body, html {
     display: flex;
     height: 100vh;
     width: 100vw;
-    position: fixed; /* Adicione isso para garantir que cubra a tela toda */
+    position: fixed; 
     top: 0;
     left: 0;
 }
 
 .background-section {
     flex: 1.5; 
-    background-image: url('img/menu1.jpg'); 
+    background-image: url('../assets/img/menu1.jpg'); 
     background-size: cover; 
     background-position: center;
     display: flex;
