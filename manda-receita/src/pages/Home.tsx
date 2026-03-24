@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { Link } from "react-router-dom"; // Importando o Link para navegação fluida
 import "./Home.css";
 import CardReceita from "../components/CardReceita";
 
@@ -14,10 +15,9 @@ interface Receita {
 }
 
 const Home = () => {
-  // Estado para controlar a visibilidade do formulário (Lógica Facebook)
   const [isPostagemAberta, setIsPostagemAberta] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
 
-  // Estado para a lista de receitas
   const [receitas, setReceitas] = useState<Receita[]>([
     {
       id: 1,
@@ -33,10 +33,6 @@ const Home = () => {
     },
   ]);
 
-  // Estado para o preview da imagem
-  const [preview, setPreview] = useState<string | null>(null);
-
-  // Função para processar a imagem selecionada
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -48,29 +44,38 @@ const Home = () => {
     }
   };
 
-  // Função para lidar com o envio do formulário
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Receita enviada com sucesso! (Lógica de salvamento em breve)");
-
-    // Após enviar, fechamos o formulário e limpamos o preview
+    alert("Receita enviada com sucesso!");
     setIsPostagemAberta(false);
     setPreview(null);
   };
 
   return (
     <div className="home-container">
-      <header>
-        <h1>Manda Receita</h1>
+      {/* Header Atualizado com link de Perfil */}
+      <header className="main-header">
+        <div className="header-content">
+          <h1>Manda Receita</h1>
+          <nav className="header-nav">
+            <Link to="/setup-profile" className="nav-user">
+              <span>Meu Perfil</span>
+              <img
+                src="https://i.pravatar.cc/40"
+                alt="Avatar"
+                className="nav-avatar"
+              />
+            </Link>
+          </nav>
+        </div>
       </header>
 
       <main className="main-layout">
-        {/* Sidebar Esquerda */}
         <aside className="sidebar sidebar-left">
           <h3>Navegação</h3>
           <ul>
             <li>
-              <a href="#">Página Inicial</a>
+              <Link to="/principal">Página Inicial</Link>
             </li>
             <li>
               <a href="#">Pratos Principais</a>
@@ -82,9 +87,7 @@ const Home = () => {
         </aside>
 
         <div className="main-feed">
-          {/* --- NOVA LÓGICA DE FORMULÁRIO CONDICIONAL --- */}
           <section className="formulario-receita">
-            {/* 1. SE o formulário NÃO estiver aberto, mostramos a "share-box" */}
             {!isPostagemAberta ? (
               <div
                 className="share-box"
@@ -100,7 +103,6 @@ const Home = () => {
                 </div>
               </div>
             ) : (
-              // 2. CASO CONTRÁRIO (se estiver aberto), mostramos o formulário completo
               <div className="modal-postagem">
                 <div className="modal-header">
                   <h3>Criar Nova Receita</h3>
@@ -159,7 +161,6 @@ const Home = () => {
                     ></textarea>
                   </div>
 
-                  {/* Campo de Upload de Foto */}
                   <div className="form-group">
                     <label htmlFor="fotoReceita">📸 Adicionar Foto</label>
                     <input
@@ -168,8 +169,6 @@ const Home = () => {
                       accept="image/*"
                       onChange={handleImageChange}
                     />
-
-                    {/* Preview da Imagem */}
                     {preview && (
                       <div
                         className="image-preview-container"
@@ -211,7 +210,6 @@ const Home = () => {
             )}
           </section>
 
-          {/* Feed de Receitas */}
           <section className="feed-receitas">
             <h2>Receitas Recentes</h2>
             <div className="container-receitas">
@@ -222,7 +220,6 @@ const Home = () => {
           </section>
         </div>
 
-        {/* Sidebar Direita */}
         <aside className="sidebar sidebar-right">
           <h3>Receitas em Alta</h3>
           <ul>

@@ -5,6 +5,7 @@ import './SetupProfile.css';
 const SetupProfile = () => {
   const navigate = useNavigate();
   const [fotoPerfil, setFotoPerfil] = useState<string | null>(null);
+  const [nomeExibicao, setNomeExibicao] = useState(''); // Estado para o apelido
 
   const handleFotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -17,8 +18,19 @@ const SetupProfile = () => {
 
   const handleFinalizar = (e: FormEvent) => {
     e.preventDefault();
-    // No futuro, aqui salvamos no Banco de Dados
-    navigate('/principal'); // Depois de configurar, vai pro feed
+
+    // Criamos o objeto com os dados que queremos persistir
+    const dadosUsuario = {
+      nome: nomeExibicao,
+      foto: fotoPerfil
+    };
+
+    // Salvamos no LocalStorage (o "mini banco" do navegador)
+    // Precisamos transformar em String usando JSON.stringify
+    localStorage.setItem('@MandaReceita:perfil', JSON.stringify(dadosUsuario));
+
+    alert("Perfil configurado com sucesso!");
+    navigate('/principal'); 
   };
 
   return (
@@ -28,7 +40,6 @@ const SetupProfile = () => {
         <p>Vamos deixar o seu perfil com a sua cara.</p>
 
         <form onSubmit={handleFinalizar}>
-          {/* Foto de Perfil Estilo Rede Social */}
           <div className="avatar-upload">
             <div className="avatar-preview">
               <img 
@@ -53,7 +64,13 @@ const SetupProfile = () => {
 
           <div className="input-group">
             <label>Como quer ser chamado(a)?</label>
-            <input type="text" placeholder="Ex: Brunão, Nutri Ana..." required />
+            <input 
+              type="text" 
+              placeholder="Ex: Brunão" 
+              value={nomeExibicao}
+              onChange={(e) => setNomeExibicao(e.target.value)}
+              required 
+            />
           </div>
 
           <div className="input-group">

@@ -49,6 +49,91 @@ header h1 {
   font-size: 1.8em;
 }
 
+/* Container principal do Header */
+.main-header {
+  background-color: #3f220b;
+  color: white;
+  padding: 15px 0; /* Aumentamos o respiro vertical */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Centralizador do conteúdo */
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between; /* Joga o título pra um lado e o perfil pro outro */
+  align-items: center;
+  padding: 0 30px; /* Respiro nas laterais para não encostar na borda da tela */
+}
+
+/* Título com respiro */
+.header-content h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+}
+
+/* Área do Perfil (Direita) */
+.header-nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espaço entre o texto e a foto */
+  text-decoration: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 25px; /* Fundo arredondado ao passar o mouse */
+  transition: background 0.3s;
+}
+
+.nav-user:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Efeito de destaque suave */
+}
+
+.nav-user span {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* A Foto de Perfil com borda e respiro */
+.nav-avatar {
+  width: 42px; /* Aumentei um pouco o tamanho */
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.main-header {
+  background-color: #3f220b;
+  color: white;
+  padding: 15px 0;
+  
+  /* O SEGREDO ESTÁ AQUI: */
+  position: fixed; /* Fixa na tela independente do scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Garante que ela fique na frente das fotos e posts */
+  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* IMPORTANTE: Como a navbar agora é "fixed", ela sai do fluxo da página. 
+   Precisamos dar um empurrão no conteúdo para baixo para não sumir atrás dela. */
+.home-container {
+  padding-top: 80px; /* Ajuste esse valor conforme a altura da sua navbar */
+}
+
 main {
   display: grid;
   grid-template-columns: 300px 1fr 300px;
