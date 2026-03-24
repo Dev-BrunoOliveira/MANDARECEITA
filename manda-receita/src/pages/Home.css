@@ -9,24 +9,22 @@
   --sombra-padrao: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* 1. Libera a rolagem em toda a página */
-body, html {
-    overflow-y: auto !important; /* Permite scroll vertical */
-    height: auto !important;     /* Deixa a altura crescer com o conteúdo */
+body,
+html {
+  overflow-y: auto !important;
+  height: auto !important;
 }
 
-/* 2. Garante que o container da Home não trave o conteúdo */
 .home-container {
-    min-height: 100vh;
-    height: auto;
-    overflow: visible; /* Garante que nada fique escondido */
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
 }
 
-/* 3. Se as suas sidebars estiverem "travando" o meio, adicione isso: */
 .main-layout {
-    display: flex;
-    align-items: flex-start; /* Alinha tudo no topo */
-    overflow: visible;
+  display: flex;
+  align-items: flex-start;
+  overflow: visible;
 }
 
 header {
@@ -49,53 +47,64 @@ header h1 {
   font-size: 1.8em;
 }
 
-/* Container principal do Header */
 .main-header {
   background-color: #3f220b;
   color: white;
-  padding: 15px 0; /* Aumentamos o respiro vertical */
-  position: sticky;
+  width: 100%;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  height: 70px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Centralizador do conteúdo */
 .header-content {
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between; /* Joga o título pra um lado e o perfil pro outro */
+  justify-content: space-between;
   align-items: center;
-  padding: 0 30px; /* Respiro nas laterais para não encostar na borda da tela */
+  padding: 0 20px;
 }
 
-/* Título com respiro */
-.header-content h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  letter-spacing: 1px;
-}
-
-/* Área do Perfil (Direita) */
 .header-nav {
   display: flex;
   align-items: center;
+  gap: 30px;
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--cor-principal);
 }
 
 .nav-user {
   display: flex;
   align-items: center;
-  gap: 12px; /* Espaço entre o texto e a foto */
+  gap: 10px;
   text-decoration: none;
   color: white;
-  padding: 8px 15px;
-  border-radius: 25px; /* Fundo arredondado ao passar o mouse */
-  transition: background 0.3s;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 20px;
 }
 
 .nav-user:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Efeito de destaque suave */
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-user span {
@@ -103,35 +112,30 @@ header h1 {
   font-size: 1rem;
 }
 
-/* A Foto de Perfil com borda e respiro */
 .nav-avatar {
-  width: 42px; /* Aumentei um pouco o tamanho */
+  width: 42px;
   height: 42px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.8);
   object-fit: cover;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .main-header {
   background-color: #3f220b;
   color: white;
   padding: 15px 0;
-  
-  /* O SEGREDO ESTÁ AQUI: */
-  position: fixed; /* Fixa na tela independente do scroll */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* Garante que ela fique na frente das fotos e posts */
-  
+  z-index: 1000;
+
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* IMPORTANTE: Como a navbar agora é "fixed", ela sai do fluxo da página. 
-   Precisamos dar um empurrão no conteúdo para baixo para não sumir atrás dela. */
 .home-container {
-  padding-top: 80px; /* Ajuste esse valor conforme a altura da sua navbar */
+  padding-top: 80px;
 }
 
 main {
@@ -248,7 +252,9 @@ main {
   background-color: #f9f9f9;
   font-size: 1rem;
   line-height: 1.5;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .form-group input[type="text"]:focus,
@@ -374,74 +380,178 @@ main {
 }
 
 .formulario-receita {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
-/* Estilo da caixa que fica visível (estilo Facebook) */
 .share-box {
-    background: white;
-    padding: 15px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-    transition: background-color 0.2s;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: background-color 0.2s;
 }
 
 .share-box:hover {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 .user-avatar {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
 }
 
 .fake-input {
-    background-color: #f0f2f5;
-    border-radius: 20px;
-    padding: 10px 20px;
-    flex: 1;
-    color: #65676b;
-    text-align: left;
-    font-size: 0.95em;
+  background-color: #f0f2f5;
+  border-radius: 20px;
+  padding: 10px 20px;
+  flex: 1;
+  color: #65676b;
+  text-align: left;
+  font-size: 0.95em;
 }
 
-/* Estilo do modal quando aberto */
 .modal-postagem {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
 }
 
 .modal-header h3 {
-    margin: 0;
-    color: #3f220b;
+  margin: 0;
+  color: #3f220b;
 }
 
 .btn-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #888;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
 }
 
 .btn-close:hover {
-    color: #333;
+  color: #333;
+}
+
+/* Responsividade da NavBar */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 15px;
+  }
+
+  .header-content h1 {
+    font-size: 1.4rem; /* Diminui o logo para sobrar espaço */
+  }
+
+  /* Opção A: Esconde os links de texto no mobile e deixa só ícones (ou move para um menu) */
+  .nav-links {
+    display: none; /* Aqui você poderia implementar um menu sanduíche depois */
+  }
+
+  .nav-user span {
+    display: none; /* Esconde o texto "Meu Perfil" e deixa só a foto */
+  }
+
+  .nav-user {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  /* Ajuste do Layout das Colunas */
+  main {
+    grid-template-columns: 1fr; /* Empilha tudo em uma coluna só */
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .sidebar-right, .sidebar-left {
+    display: none; /* Esconde as barras laterais no celular para focar no Feed */
+  }
+  
+  .main-feed {
+    max-width: 100%;
+  }
+}
+/* --- Menu Hambúrguer (Botão) --- */
+.menu-hamburger {
+  display: none; /* Escondido por padrão */
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+/* --- Responsividade (Mobile) --- */
+@media (max-width: 768px) {
+  .menu-hamburger {
+    display: flex; /* Mostra no mobile */
+  }
+
+  /* Transforma a Nav em um menu suspenso */
+  .header-nav {
+    position: absolute;
+    top: 70px; /* Logo abaixo da barra marrom */
+    left: 0;
+    width: 100%;
+    background-color: #3f220b; /* Mesma cor da navbar */
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    display: none; /* Escondido por padrão */
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  }
+
+  .header-nav.active {
+    display: flex; /* Mostra quando o estado for true */
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links a {
+    font-size: 1.2rem;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .nav-user {
+    border-left: none;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Animação das barrinhas virando um 'X' (opcional) */
+  .bar.open:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+  .bar.open:nth-child(2) { opacity: 0; }
+  .bar.open:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
 }
 
 @media (max-width: 1200px) {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom"; // Importando o Link para navegação fluida
+import { Link } from "react-router-dom"; 
 import "./Home.css";
 import CardReceita from "../components/CardReceita";
 
@@ -16,12 +16,13 @@ interface Receita {
 
 const Home = () => {
   const [isPostagemAberta, setIsPostagemAberta] = useState(false);
+  const [isMenuAberto, setIsMenuAberto] = useState(false); // Estado para o Menu Hambúrguer
   const [preview, setPreview] = useState<string | null>(null);
 
   const [receitas, setReceitas] = useState<Receita[]>([
     {
       id: 1,
-      chef: "Chef Jacquin",
+      chef: "Chef Erick Jacquin",
       titulo: "Pudim de Leite Perfeito",
       categoria: "Doces",
       imagem:
@@ -53,12 +54,30 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* Header Atualizado com link de Perfil */}
+      {/* --- NAVBAR SUPERIOR --- */}
       <header className="main-header">
         <div className="header-content">
           <h1>Manda Receita</h1>
-          <nav className="header-nav">
-            <Link to="/setup-profile" className="nav-user">
+
+          {/* Botão Hambúrguer (Aparece via CSS no Mobile) */}
+          <button 
+            className="menu-hamburger" 
+            onClick={() => setIsMenuAberto(!isMenuAberto)}
+            aria-label="Abrir menu"
+          >
+            <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
+            <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
+            <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
+          </button>
+          
+          <nav className={`header-nav ${isMenuAberto ? "active" : ""}`}>
+            <div className="nav-links">
+              <Link to="/principal" onClick={() => setIsMenuAberto(false)}>Página Inicial</Link>
+              <a href="#" onClick={() => setIsMenuAberto(false)}>Pratos Principais</a>
+              <a href="#" onClick={() => setIsMenuAberto(false)}>Mais Receitas</a>
+            </div>
+
+            <Link to="/setup-profile" className="nav-user" onClick={() => setIsMenuAberto(false)}>
               <span>Meu Perfil</span>
               <img
                 src="https://i.pravatar.cc/40"
@@ -70,21 +89,9 @@ const Home = () => {
         </div>
       </header>
 
+      {/* --- CONTEÚDO PRINCIPAL --- */}
       <main className="main-layout">
-        <aside className="sidebar sidebar-left">
-          <h3>Navegação</h3>
-          <ul>
-            <li>
-              <Link to="/principal">Página Inicial</Link>
-            </li>
-            <li>
-              <a href="#">Pratos Principais</a>
-            </li>
-            <li>
-              <a href="#">Mais Receitas</a>
-            </li>
-          </ul>
-        </aside>
+        {/* Sidebar esquerda removida (links agora estão no Header) */}
 
         <div className="main-feed">
           <section className="formulario-receita">
@@ -118,20 +125,12 @@ const Home = () => {
                 <form id="formNovaReceita" onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label>Título da Receita</label>
-                    <input
-                      type="text"
-                      placeholder="Ex: Bolo de Fubá"
-                      required
-                    />
+                    <input type="text" placeholder="Ex: Bolo de Fubá" required />
                   </div>
 
                   <div className="form-group">
                     <label>Seu Nome</label>
-                    <input
-                      type="text"
-                      placeholder="Ex: Bruno Oliveira"
-                      required
-                    />
+                    <input type="text" placeholder="Ex: Bruno Oliveira" required />
                   </div>
 
                   <div className="form-group">
@@ -145,66 +144,28 @@ const Home = () => {
 
                   <div className="form-group">
                     <label>Ingredientes</label>
-                    <textarea
-                      rows={4}
-                      placeholder="Liste os ingredientes..."
-                      required
-                    ></textarea>
+                    <textarea rows={4} placeholder="Liste os ingredientes..." required></textarea>
                   </div>
 
                   <div className="form-group">
                     <label>Modo de Preparo</label>
-                    <textarea
-                      rows={4}
-                      placeholder="Passo a passo..."
-                      required
-                    ></textarea>
+                    <textarea rows={4} placeholder="Passo a passo..." required></textarea>
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="fotoReceita">📸 Adicionar Foto</label>
-                    <input
-                      type="file"
-                      id="fotoReceita"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                    />
+                    <input type="file" id="fotoReceita" accept="image/*" onChange={handleImageChange} />
                     {preview && (
-                      <div
-                        className="image-preview-container"
-                        style={{ marginTop: "10px", textAlign: "center" }}
-                      >
-                        <img
-                          src={preview}
-                          alt="Preview"
-                          style={{
-                            maxWidth: "100%",
-                            maxHeight: "200px",
-                            borderRadius: "8px",
-                            border: "1px solid #ddd",
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setPreview(null)}
-                          style={{
-                            display: "block",
-                            color: "red",
-                            margin: "5px auto",
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                          }}
-                        >
+                      <div className="image-preview-container" style={{ marginTop: "10px", textAlign: "center" }}>
+                        <img src={preview} alt="Preview" style={{ maxWidth: "100%", maxHeight: "200px", borderRadius: "8px", border: "1px solid #ddd" }} />
+                        <button type="button" onClick={() => setPreview(null)} style={{ display: "block", color: "red", margin: "5px auto", background: "none", border: "none", cursor: "pointer" }}>
                           Remover foto
                         </button>
                       </div>
                     )}
                   </div>
 
-                  <button type="submit" className="btn-enviar">
-                    Publicar Receita
-                  </button>
+                  <button type="submit" className="btn-enviar">Publicar Receita</button>
                 </form>
               </div>
             )}
@@ -223,12 +184,8 @@ const Home = () => {
         <aside className="sidebar sidebar-right">
           <h3>Receitas em Alta</h3>
           <ul>
-            <li>
-              <a href="#">Bolo de Chocolate</a>
-            </li>
-            <li>
-              <a href="#">Pipoca Gourmet</a>
-            </li>
+            <li><a href="#">Bolo de Chocolate</a></li>
+            <li><a href="#">Pipoca Gourmet</a></li>
           </ul>
         </aside>
       </main>

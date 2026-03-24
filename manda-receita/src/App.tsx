@@ -17,6 +17,7 @@ function App() {
         
         {/* Rota do Feed Principal */}
         <Route path="/principal" element={<Home />} />
+        {/* Rota de Configuração de Perfil */}
         <Route path="/setup-profile" element={<SetupProfile />} />
       </Routes>
     </Router>
