@@ -9,12 +9,24 @@
   --sombra-padrao: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-  margin: 0;
-  background-color: var(--cor-fundo);
-  color: var(--cor-texto-principal);
+/* 1. Libera a rolagem em toda a página */
+body, html {
+    overflow-y: auto !important; /* Permite scroll vertical */
+    height: auto !important;     /* Deixa a altura crescer com o conteúdo */
+}
+
+/* 2. Garante que o container da Home não trave o conteúdo */
+.home-container {
+    min-height: 100vh;
+    height: auto;
+    overflow: visible; /* Garante que nada fique escondido */
+}
+
+/* 3. Se as suas sidebars estiverem "travando" o meio, adicione isso: */
+.main-layout {
+    display: flex;
+    align-items: flex-start; /* Alinha tudo no topo */
+    overflow: visible;
 }
 
 header {
@@ -87,6 +99,19 @@ main {
 
 .sidebar ul li a:hover {
   background-color: var(--cor-fundo);
+}
+
+.form-group input[type="file"] {
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.image-preview-container {
+  border: 2px dashed #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 10px;
 }
 
 .formulario-receita {
@@ -261,6 +286,77 @@ main {
 
 .toggle-recipe-link:hover {
   color: var(--cor-principal-hover);
+}
+
+.formulario-receita {
+    margin-bottom: 20px;
+}
+
+/* Estilo da caixa que fica visível (estilo Facebook) */
+.share-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    transition: background-color 0.2s;
+}
+
+.share-box:hover {
+    background-color: #f8f9fa;
+}
+
+.user-avatar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.fake-input {
+    background-color: #f0f2f5;
+    border-radius: 20px;
+    padding: 10px 20px;
+    flex: 1;
+    color: #65676b;
+    text-align: left;
+    font-size: 0.95em;
+}
+
+/* Estilo do modal quando aberto */
+.modal-postagem {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #3f220b;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.btn-close:hover {
+    color: #333;
 }
 
 @media (max-width: 1200px) {
