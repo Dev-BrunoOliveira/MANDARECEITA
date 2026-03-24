@@ -73,8 +73,8 @@ const Home = () => {
           <nav className={`header-nav ${isMenuAberto ? "active" : ""}`}>
             <div className="nav-links">
               <Link to="/principal" onClick={() => setIsMenuAberto(false)}>Página Inicial</Link>
-              <a href="#" onClick={() => setIsMenuAberto(false)}>Pratos Principais</a>
-              <a href="#" onClick={() => setIsMenuAberto(false)}>Mais Receitas</a>
+              <a href="#" onClick={() => setIsMenuAberto(false)}>Categorias</a>
+              <a href="#" onClick={() => setIsMenuAberto(false)}>Minhas Receitas</a>
             </div>
 
             <Link to="/setup-profile" className="nav-user" onClick={() => setIsMenuAberto(false)}>
