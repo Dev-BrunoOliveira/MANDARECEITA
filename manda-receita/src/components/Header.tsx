@@ -1,15 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Adicionamos o useEffect
 import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuAberto, setIsMenuAberto] = useState(false);
+  const [fotoUsuario, setFotoUsuario] = useState("https://via.placeholder.com/40");
+
+  // Esse efeito roda toda vez que o Header aparece na tela
+  useEffect(() => {
+    const dadosSalvos = localStorage.getItem('@MandaReceita:perfil');
+    if (dadosSalvos) {
+      const { foto } = JSON.parse(dadosSalvos);
+      if (foto) setFotoUsuario(foto); // Se tiver foto no banco, usa ela
+    }
+  }, []);
 
   return (
     <header className="main-header">
         <div className="header-content">
           <h1>Manda Receita</h1>
 
-          {/* Botão Hambúrguer (Aparece via CSS no Mobile) */}
           <button 
             className="menu-hamburger" 
             onClick={() => setIsMenuAberto(!isMenuAberto)}
@@ -30,7 +39,7 @@ const Header = () => {
             <Link to="/setup-profile" className="nav-user" onClick={() => setIsMenuAberto(false)}>
               <span>Meu Perfil</span>
               <img
-                src="https://i.pravatar.cc/40"
+                src={fotoUsuario} // <-- AGORA USA A FOTO DO ESTADO
                 alt="Avatar"
                 className="nav-avatar"
               />

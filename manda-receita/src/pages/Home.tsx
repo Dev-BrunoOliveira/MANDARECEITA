@@ -16,7 +16,7 @@ interface Receita {
 
 const Home = () => {
   const [isPostagemAberta, setIsPostagemAberta] = useState(false);
-  const [isMenuAberto, setIsMenuAberto] = useState(false); // Estado para o Menu Hambúrguer
+  const [isMenuAberto, setIsMenuAberto] = useState(false); 
   const [preview, setPreview] = useState<string | null>(null);
 
   const [receitas, setReceitas] = useState<Receita[]>([

@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom'; 
 import './Login.css';
+import { useAuth } from "../context/AuthContext"
 
 const Login = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); 
-  
-    navigate('/principal');
-  };
+  e.preventDefault()
+
+  // 🔥 SIMULA USUÁRIO VINDO DO BACKEND
+  setUser({
+    id: 1,
+    name: "Bruno Oliveira",
+    username: "bruno",
+    avatar: "https://i.pravatar.cc/150?img=3",
+    isProfileCompleted: false
+  })
+
+  navigate("/principal")
+}
 
   return (
     <div className="login-container">

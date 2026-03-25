@@ -61,14 +61,14 @@ const SetupProfile = () => {
 
             <div className="input-group">
               <label>Nome Completo</label>
-              <input type="text" placeholder="Como no documento" required />
+              <input type="text" placeholder="Nome Completo" required />
             </div>
 
             <div className="input-group">
               <label>Como quer ser chamado(a)?</label>
               <input 
                 type="text" 
-                placeholder="Ex: Brunão" 
+                placeholder="Ex: Chef João" 
                 value={nomeExibicao}
                 onChange={(e) => setNomeExibicao(e.target.value)}
                 required 
