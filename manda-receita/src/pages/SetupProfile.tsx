@@ -32,26 +32,32 @@ const SetupProfile = () => {
     }
   }
 
-  const handleFinalizar = async (e: FormEvent) => {
-    e.preventDefault()
-    if (!user) return
+  const handleFinalizar = (e: FormEvent) => {
+  e.preventDefault()
 
-    const usuarioAtualizado = {
-      ...user,
-      id: user.id || Math.floor(Math.random() * 1000), 
-      name: nomeExibicao,
-      avatar: fotoPerfil || "", // Se for null, envia uma string vazia
-      isProfileCompleted: true 
-    }
+  if (!user) return
 
-    setUser(usuarioAtualizado)
-    localStorage.setItem("@MandaReceita:user", JSON.stringify(usuarioAtualizado))
-    
-    setTimeout(() => {
-        navigate("/principal")
-    }, 100)
-  } 
+  const usernameGerado = nomeExibicao
+    .toLowerCase()
+    .replace(/\s+/g, "_")
 
+  const usuarioAtualizado = {
+    ...user,
+    name: nomeExibicao,
+    username: usernameGerado,
+    avatar: fotoPerfil || user.avatar,
+    isProfileCompleted: true
+  }
+
+  setUser(usuarioAtualizado)
+
+  localStorage.setItem(
+    "@MandaReceita:user",
+    JSON.stringify(usuarioAtualizado)
+  )
+
+  navigate("/principal")
+}
   return (
     <div className="perfil-page-wrapper">
       <Header />

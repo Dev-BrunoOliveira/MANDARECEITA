@@ -6,23 +6,22 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Home from "./pages/Home"
 import SetupProfile from "./pages/SetupProfile"
-import Profile from "./pages/Profile" 
+import Profile from "./pages/Profile"
 
-// Rota para quem precisa estar logado
+
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth() // Pega o loading aqui também
-  
-  // IMPORTANTE: Enquanto estiver lendo o localStorage, não redireciona!
-  if (loading) return <div className="loading-screen">Carregando...</div>
-  
+  const { user, loading } = useAuth()
+
+  if (loading) return <div>Carregando...</div>
+
   return user ? <>{children}</> : <Navigate to="/" />
 }
 
-// Rota que obriga o preenchimento do perfil antes de ir para a Home
+
 const RequireProfile = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth()
 
-  if (loading) return null // Espera carregar
+  if (loading) return null
 
   if (user && !user.isProfileCompleted) {
     return <Navigate to="/setup-profile" />
@@ -31,14 +30,19 @@ const RequireProfile = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>
 }
 
+
 function App() {
   return (
     <Router>
       <Routes>
+
+        {/* Login */}
         <Route path="/" element={<Login />} />
+
+        {/* Cadastro */}
         <Route path="/register" element={<Register />} />
 
-        {/* Home: Logado + Perfil Completo */}
+        {/* Feed */}
         <Route
           path="/principal"
           element={
@@ -50,7 +54,7 @@ function App() {
           }
         />
 
-        {/* Setup: Apenas Logado */}
+        {/* Onboarding */}
         <Route
           path="/setup-profile"
           element={
@@ -60,17 +64,19 @@ function App() {
           }
         />
 
-        {/* Perfil: Logado */}
-        <Route 
-          path="/perfil/:id" 
+        {/* Perfil SOCIAL */}
+        <Route
+          path="/user/:username"
           element={
             <PrivateRoute>
               <Profile />
             </PrivateRoute>
-          } 
+          }
         />
 
+        {/* fallback */}
         <Route path="*" element={<Navigate to="/" />} />
+
       </Routes>
     </Router>
   )

@@ -3,7 +3,8 @@ import type { ChangeEvent, FormEvent } from "react";
 import { Link } from "react-router-dom"; 
 import "./Home.css";
 import CardReceita from "../components/CardReceita";
-import { useAuth } from "../context/AuthContext"; // Importando o contexto
+import { useAuth } from "../context/AuthContext"; 
+
 
 interface Receita {
   id: number;
@@ -51,9 +52,8 @@ const Home = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Criando o objeto da nova receita
     const novaRec: Receita = {
-      id: Date.now(), // Gerador de ID temporário
+      id: Date.now(), 
       chef: user?.name || "Usuário Anonimo",
       titulo: novoTitulo,
       categoria: novaCategoria,
@@ -62,10 +62,8 @@ const Home = () => {
       preparo: novoPreparo
     };
 
-    // Adiciona no topo da lista (estilo feed)
     setReceitas([novaRec, ...receitas]);
     
-    // Reseta o formulário
     setIsPostagemAberta(false);
     setPreview(null);
     setNovoTitulo("");
