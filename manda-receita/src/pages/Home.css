@@ -48,19 +48,16 @@ header h1 {
 }
 
 .main-header {
-  background-color: #3f220b;
-  color: white;
-  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
+  width: 100%;
   height: 70px;
+  background-color: #3f220b;
+  z-index: 9999; 
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-
 .header-content {
   max-width: 1400px;
   width: 100%;
@@ -135,7 +132,7 @@ header h1 {
 }
 
 .home-container {
-  padding-top: 80px;
+  padding-top: 70px;
 }
 
 main {

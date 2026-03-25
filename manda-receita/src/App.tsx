@@ -8,41 +8,35 @@ import Home from "./pages/Home"
 import SetupProfile from "./pages/SetupProfile"
 import Profile from "./pages/Profile"
 
-
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth()
 
   if (loading) return <div>Carregando...</div>
 
-  return user ? <>{children}</> : <Navigate to="/" />
+  return user ? <>{children}</> : <Navigate to="/" replace />
 }
-
 
 const RequireProfile = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth()
 
-  if (loading) return null
+  if (loading) return <div>Carregando...</div>
 
   if (user && !user.isProfileCompleted) {
-    return <Navigate to="/setup-profile" />
+    return <Navigate to="/setup-profile" replace />
   }
 
   return <>{children}</>
 }
-
 
 function App() {
   return (
     <Router>
       <Routes>
 
-        {/* Login */}
         <Route path="/" element={<Login />} />
 
-        {/* Cadastro */}
         <Route path="/register" element={<Register />} />
 
-        {/* Feed */}
         <Route
           path="/principal"
           element={
@@ -54,7 +48,6 @@ function App() {
           }
         />
 
-        {/* Onboarding */}
         <Route
           path="/setup-profile"
           element={
@@ -64,18 +57,19 @@ function App() {
           }
         />
 
-        {/* Perfil SOCIAL */}
+        {/* ⭐ PERFIL CORRIGIDO */}
         <Route
           path="/user/:username"
           element={
             <PrivateRoute>
-              <Profile />
+              <RequireProfile>
+                <Profile />
+              </RequireProfile>
             </PrivateRoute>
           }
         />
 
-        {/* fallback */}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
     </Router>
