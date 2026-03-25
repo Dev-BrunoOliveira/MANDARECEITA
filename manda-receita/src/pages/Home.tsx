@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { Link } from "react-router-dom"; 
 import "./Home.css";
 import CardReceita from "../components/CardReceita";
+import { useAuth } from "../context/AuthContext"; // Importando o contexto
 
 interface Receita {
   id: number;
@@ -15,9 +16,16 @@ interface Receita {
 }
 
 const Home = () => {
+  const { user } = useAuth(); // Pegando os dados do usuário logado
   const [isPostagemAberta, setIsPostagemAberta] = useState(false);
   const [isMenuAberto, setIsMenuAberto] = useState(false); 
   const [preview, setPreview] = useState<string | null>(null);
+
+  // Estados para o formulário
+  const [novoTitulo, setNovoTitulo] = useState("");
+  const [novaCategoria, setNovaCategoria] = useState("salgados");
+  const [novosIngredientes, setNovosIngredientes] = useState("");
+  const [novoPreparo, setNovoPreparo] = useState("");
 
   const [receitas, setReceitas] = useState<Receita[]>([
     {
@@ -25,12 +33,9 @@ const Home = () => {
       chef: "Chef Erick Jacquin",
       titulo: "Pudim de Leite Perfeito",
       categoria: "Doces",
-      imagem:
-        "https://images.pexels.com/photos/2105104/pexels-photo-2105104.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      ingredientes:
-        "- 1 lata de leite condensado, - 1 lata de leite, - 3 ovos inteiros",
-      preparo:
-        "1. Bata tudo no liquidificador. 2. Despeje em forma caramelizada. 3. Asse em banho-maria.",
+      imagem: "https://images.pexels.com/photos/2105104/pexels-photo-2105104.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      ingredientes: "- 1 lata de leite condensado, - 1 lata de leite, - 3 ovos inteiros",
+      preparo: "1. Bata tudo no liquidificador. 2. Despeje em forma caramelizada. 3. Asse em banho-maria.",
     },
   ]);
 
@@ -38,33 +43,45 @@ const Home = () => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
+      reader.onloadend = () => setPreview(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Receita enviada com sucesso!");
+
+    // Criando o objeto da nova receita
+    const novaRec: Receita = {
+      id: Date.now(), // Gerador de ID temporário
+      chef: user?.name || "Usuário Anonimo",
+      titulo: novoTitulo,
+      categoria: novaCategoria,
+      imagem: preview || "https://via.placeholder.com/300",
+      ingredientes: novosIngredientes,
+      preparo: novoPreparo
+    };
+
+    // Adiciona no topo da lista (estilo feed)
+    setReceitas([novaRec, ...receitas]);
+    
+    // Reseta o formulário
     setIsPostagemAberta(false);
     setPreview(null);
+    setNovoTitulo("");
+    setNovosIngredientes("");
+    setNovoPreparo("");
+    
+    alert("Receita publicada com sucesso!");
   };
 
   return (
     <div className="home-container">
-      {/* --- NAVBAR SUPERIOR --- */}
       <header className="main-header">
         <div className="header-content">
           <h1>Manda Receita</h1>
 
-          {/* Botão Hambúrguer (Aparece via CSS no Mobile) */}
-          <button 
-            className="menu-hamburger" 
-            onClick={() => setIsMenuAberto(!isMenuAberto)}
-            aria-label="Abrir menu"
-          >
+          <button className="menu-hamburger" onClick={() => setIsMenuAberto(!isMenuAberto)}>
             <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
             <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
             <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
@@ -72,15 +89,15 @@ const Home = () => {
           
           <nav className={`header-nav ${isMenuAberto ? "active" : ""}`}>
             <div className="nav-links">
-              <Link to="/principal" onClick={() => setIsMenuAberto(false)}>Página Inicial</Link>
-              <a href="#" onClick={() => setIsMenuAberto(false)}>Categorias</a>
-              <a href="#" onClick={() => setIsMenuAberto(false)}>Minhas Receitas</a>
+              <Link to="/principal">Página Inicial</Link>
+              <a href="#">Categorias</a>
+              <a href="#">Minhas Receitas</a>
             </div>
 
-            <Link to="/setup-profile" className="nav-user" onClick={() => setIsMenuAberto(false)}>
-              <span>Meu Perfil</span>
+            <Link to="/setup-profile" className="nav-user">
+              <span>{user?.name || "Meu Perfil"}</span>
               <img
-                src="https://i.pravatar.cc/40"
+                src={user?.avatar || "https://i.pravatar.cc/40"}
                 alt="Avatar"
                 className="nav-avatar"
               />
@@ -89,53 +106,42 @@ const Home = () => {
         </div>
       </header>
 
-      {/* --- CONTEÚDO PRINCIPAL --- */}
       <main className="main-layout">
-        {/* Sidebar esquerda removida (links agora estão no Header) */}
-
         <div className="main-feed">
           <section className="formulario-receita">
             {!isPostagemAberta ? (
-              <div
-                className="share-box"
-                onClick={() => setIsPostagemAberta(true)}
-              >
+              <div className="share-box" onClick={() => setIsPostagemAberta(true)}>
                 <img
-                  src="https://i.pravatar.cc/40"
+                  src={user?.avatar || "https://i.pravatar.cc/40"}
                   alt="Sua foto"
                   className="user-avatar"
                 />
                 <div className="fake-input">
-                  Compartilhe uma receita, Bruno...
+                  O que vamos cozinhar hoje, {user?.name?.split(' ')[0] || "Chef"}?
                 </div>
               </div>
             ) : (
               <div className="modal-postagem">
                 <div className="modal-header">
                   <h3>Criar Nova Receita</h3>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setIsPostagemAberta(false)}
-                  >
-                    ×
-                  </button>
+                  <button type="button" className="btn-close" onClick={() => setIsPostagemAberta(false)}>×</button>
                 </div>
 
-                <form id="formNovaReceita" onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label>Título da Receita</label>
-                    <input type="text" placeholder="Ex: Bolo de Fubá" required />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Seu Nome</label>
-                    <input type="text" placeholder="Ex: Bruno Oliveira" required />
+                    <input 
+                        type="text" 
+                        value={novoTitulo} 
+                        onChange={(e) => setNovoTitulo(e.target.value)} 
+                        placeholder="Ex: Bolo de Fubá" 
+                        required 
+                    />
                   </div>
 
                   <div className="form-group">
                     <label>Selecione a Categoria</label>
-                    <select>
+                    <select value={novaCategoria} onChange={(e) => setNovaCategoria(e.target.value)}>
                       <option value="salgados">Salgados</option>
                       <option value="doces">Doces</option>
                       <option value="sobremesas">Sobremesas</option>
@@ -144,23 +150,33 @@ const Home = () => {
 
                   <div className="form-group">
                     <label>Ingredientes</label>
-                    <textarea rows={4} placeholder="Liste os ingredientes..." required></textarea>
+                    <textarea 
+                        rows={3} 
+                        value={novosIngredientes} 
+                        onChange={(e) => setNovosIngredientes(e.target.value)} 
+                        placeholder="Liste os ingredientes..." 
+                        required
+                    />
                   </div>
 
                   <div className="form-group">
                     <label>Modo de Preparo</label>
-                    <textarea rows={4} placeholder="Passo a passo..." required></textarea>
+                    <textarea 
+                        rows={3} 
+                        value={novoPreparo} 
+                        onChange={(e) => setNovoPreparo(e.target.value)} 
+                        placeholder="Passo a passo..." 
+                        required
+                    />
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="fotoReceita">📸 Adicionar Foto</label>
-                    <input type="file" id="fotoReceita" accept="image/*" onChange={handleImageChange} />
+                    <label htmlFor="fotoReceita" className="btn-add-foto">📸 Adicionar Foto do Prato</label>
+                    <input type="file" id="fotoReceita" accept="image/*" onChange={handleImageChange} hidden />
                     {preview && (
-                      <div className="image-preview-container" style={{ marginTop: "10px", textAlign: "center" }}>
-                        <img src={preview} alt="Preview" style={{ maxWidth: "100%", maxHeight: "200px", borderRadius: "8px", border: "1px solid #ddd" }} />
-                        <button type="button" onClick={() => setPreview(null)} style={{ display: "block", color: "red", margin: "5px auto", background: "none", border: "none", cursor: "pointer" }}>
-                          Remover foto
-                        </button>
+                      <div className="image-preview-container">
+                        <img src={preview} alt="Preview" className="img-preview-feed" />
+                        <button type="button" onClick={() => setPreview(null)} className="btn-remove">Remover foto</button>
                       </div>
                     )}
                   </div>
@@ -189,10 +205,6 @@ const Home = () => {
           </ul>
         </aside>
       </main>
-
-      <footer>
-        <p>&copy; 2026 Manda Receita. Todos os direitos reservados.</p>
-      </footer>
     </div>
   );
 };

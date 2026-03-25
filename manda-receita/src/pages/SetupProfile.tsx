@@ -1,91 +1,96 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from "../components/Header";
-import './SetupProfile.css';
+import { useState, type ChangeEvent, type FormEvent, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import Header from "../components/Header"
+import "./SetupProfile.css"
+import { useAuth } from "../context/AuthContext"
 
 const SetupProfile = () => {
-  const navigate = useNavigate();
-  const [fotoPerfil, setFotoPerfil] = useState<string | null>(null);
-  const [nomeExibicao, setNomeExibicao] = useState('');
+  const navigate = useNavigate()
+  const { user, setUser } = useAuth()
+
+  // Inicializamos com o que já existe
+  const [fotoPerfil, setFotoPerfil] = useState<string | null>(user?.avatar || null)
+  const [nomeExibicao, setNomeExibicao] = useState(user?.name || "")
+
+  // 1. TRAVA DE SEGURANÇA: Se já completou, tchau!
+  useEffect(() => {
+    if (user?.isProfileCompleted) {
+      navigate("/principal")
+    }
+  }, [user, navigate])
 
   const handleFotoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setFotoPerfil(reader.result as string);
-      reader.readAsDataURL(file);
+      if (file.size > 2 * 1024 * 1024) {
+        alert("A foto é muito grande! Max 2MB.")
+        return
+      }
+      const reader = new FileReader()
+      reader.onloadend = () => setFotoPerfil(reader.result as string)
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
-  const handleFinalizar = (e: FormEvent) => {
-    e.preventDefault();
+  const handleFinalizar = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!user) return
 
-    const dadosUsuario = {
-      nome: nomeExibicao,
-      foto: fotoPerfil
-    };
+    const usuarioAtualizado = {
+      ...user,
+      id: user.id || Math.floor(Math.random() * 1000), 
+      name: nomeExibicao,
+      avatar: fotoPerfil || "", // Se for null, envia uma string vazia
+      isProfileCompleted: true 
+    }
 
-    localStorage.setItem('@MandaReceita:perfil', JSON.stringify(dadosUsuario));
-
-    alert("Perfil configurado com sucesso!");
-    navigate('/principal'); 
-  };
+    setUser(usuarioAtualizado)
+    localStorage.setItem("@MandaReceita:user", JSON.stringify(usuarioAtualizado))
+    
+    setTimeout(() => {
+        navigate("/principal")
+    }, 100)
+  } 
 
   return (
-    // A classe principal que terá a imagem de fundo no CSS
     <div className="perfil-page-wrapper">
-      <Header /> 
-
+      <Header />
       <main className="perfil-container-bg">
         <div className="setup-card">
-          <h2>Bem-vindo(a) ao Manda Receita! 🍳</h2>
+          <h2>Bem-vindo(a) ao Manda Receita 🍳</h2>
           <p>Vamos deixar o seu perfil com a sua cara.</p>
 
           <form onSubmit={handleFinalizar}>
             <div className="avatar-upload">
               <div className="avatar-preview">
-                <img 
-                  src={fotoPerfil || "https://via.placeholder.com/150"} 
-                  alt="Preview" 
+                <img
+                  src={fotoPerfil || "https://via.placeholder.com/150"}
+                  alt="Preview"
+                  style={{ objectFit: 'cover' }}
                 />
               </div>
+
               <label htmlFor="fotoInput" className="btn-upload">Alterar Foto</label>
-              <input 
-                type="file" 
-                id="fotoInput" 
-                accept="image/*" 
-                onChange={handleFotoChange} 
-                hidden 
-              />
+              <input type="file" id="fotoInput" accept="image/*" onChange={handleFotoChange} hidden />
             </div>
 
             <div className="input-group">
-              <label>Nome Completo</label>
-              <input type="text" placeholder="Nome Completo" required />
-            </div>
-
-            <div className="input-group">
-              <label>Como quer ser chamado(a)?</label>
-              <input 
-                type="text" 
-                placeholder="Ex: Chef João" 
+              <label>Como quer ser chamado?</label>
+              <input
+                type="text"
+                placeholder="Ex: Chef Bruno"
                 value={nomeExibicao}
                 onChange={(e) => setNomeExibicao(e.target.value)}
-                required 
+                required
               />
             </div>
 
-            <div className="input-group">
-              <label>Data de Nascimento</label>
-              <input type="date" required />
-            </div>
-
-            <button type="submit" className="btn-finalizar">Começar a cozinhar!</button>
+            <button type="submit" className="btn-finalizar">Começar a cozinhar 🚀</button>
           </form>
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default SetupProfile;
+export default SetupProfile

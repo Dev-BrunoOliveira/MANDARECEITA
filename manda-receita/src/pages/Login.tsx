@@ -11,19 +11,27 @@ const Login = () => {
   const togglePassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault()
+  e.preventDefault();
 
-  // 🔥 SIMULA USUÁRIO VINDO DO BACKEND
-  setUser({
+  // 1. Criamos o objeto do usuário
+  const loggedUser = {
     id: 1,
     name: "Bruno Oliveira",
     username: "bruno",
     avatar: "https://i.pravatar.cc/150?img=3",
-    isProfileCompleted: false
-  })
+    isProfileCompleted: false // Começa como false para cair no Setup
+  };
 
-  navigate("/principal")
-}
+  // 2. SALVA NO CONTEXTO (para uso imediato)
+  setUser(loggedUser);
+
+  // 3. SALVA NO LOCALSTORAGE (para não perder ao navegar ou dar F5)
+  // O nome da chave deve ser EXATAMENTE o mesmo que está no AuthContext
+  localStorage.setItem("@MandaReceita:user", JSON.stringify(loggedUser));
+
+  // 4. AGORA SIM, NAVEGA
+  navigate("/principal");
+};
 
   return (
     <div className="login-container">
