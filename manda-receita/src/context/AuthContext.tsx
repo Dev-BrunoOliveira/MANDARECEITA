@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     user?.isProfileCompleted && user?.username
       ? `/user/${user.username}`
       : "/setup-profile";
+      
 
   useEffect(() => {
     const storageUser = localStorage.getItem("@MandaReceita:user");
