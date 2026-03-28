@@ -90,7 +90,7 @@ const Home = () => {
               <Link to="/principal">Página Inicial</Link>
               <a href="#">Categorias</a>
               <a href="#">Minhas Receitas</a>
-              <a href="#">Testando Link</a>
+              <a href="#">Destaques</a>
             </div>
 
             <Link to="/setup-profile" className="nav-user">

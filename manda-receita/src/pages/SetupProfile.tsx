@@ -91,6 +91,17 @@ const SetupProfile = () => {
               />
             </div>
 
+            <div className="input-group">
+              <label>Qual a sua data de nascimento? </label>
+              <input
+                type="date"
+                placeholder="Ex: 01/10/1995"
+                value={nomeExibicao}
+                onChange={(e) => setNomeExibicao(e.target.value)}
+                required
+              />
+            </div>
+
             <button type="submit" className="btn-finalizar">Começar a cozinhar 🚀</button>
           </form>
         </div>
