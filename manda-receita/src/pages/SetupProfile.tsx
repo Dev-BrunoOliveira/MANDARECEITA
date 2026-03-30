@@ -8,11 +8,13 @@ const SetupProfile = () => {
   const navigate = useNavigate()
   const { user, setUser } = useAuth()
 
-  // Inicializamos com o que já existe
+  // --- NOVOS ESTADOS AQUI ---
   const [fotoPerfil, setFotoPerfil] = useState<string | null>(user?.avatar || null)
   const [nomeExibicao, setNomeExibicao] = useState(user?.name || "")
+  const [dataNascimento, setDataNascimento] = useState("") // Novo
+  const [bio, setBio] = useState("") // Novo
+  const [localizacao, setLocalizacao] = useState("") // Novo
 
-  // 1. TRAVA DE SEGURANÇA: Se já completou, tchau!
   useEffect(() => {
     if (user?.isProfileCompleted) {
       navigate("/principal")
@@ -33,31 +35,28 @@ const SetupProfile = () => {
   }
 
   const handleFinalizar = (e: FormEvent) => {
-  e.preventDefault()
+    e.preventDefault()
+    if (!user) return
 
-  if (!user) return
+    const usernameGerado = nomeExibicao.toLowerCase().replace(/\s+/g, "_")
 
-  const usernameGerado = nomeExibicao
-    .toLowerCase()
-    .replace(/\s+/g, "_")
+    // --- ADICIONANDO AS INFOS NO OBJETO ---
+    const usuarioAtualizado = {
+      ...user,
+      name: nomeExibicao,
+      username: usernameGerado,
+      avatar: fotoPerfil || user.avatar,
+      dataNascimento, // Salvando nova info
+      bio,            // Salvando nova info
+      localizacao,    // Salvando nova info
+      isProfileCompleted: true
+    }
 
-  const usuarioAtualizado = {
-    ...user,
-    name: nomeExibicao,
-    username: usernameGerado,
-    avatar: fotoPerfil || user.avatar,
-    isProfileCompleted: true
+    setUser(usuarioAtualizado)
+    localStorage.setItem("@MandaReceita:user", JSON.stringify(usuarioAtualizado))
+    navigate("/principal")
   }
 
-  setUser(usuarioAtualizado)
-
-  localStorage.setItem(
-    "@MandaReceita:user",
-    JSON.stringify(usuarioAtualizado)
-  )
-
-  navigate("/principal")
-}
   return (
     <div className="perfil-page-wrapper">
       <Header />
@@ -67,19 +66,16 @@ const SetupProfile = () => {
           <p>Vamos deixar o seu perfil com a sua cara.</p>
 
           <form onSubmit={handleFinalizar}>
+            {/* Upload de Foto */}
             <div className="avatar-upload">
               <div className="avatar-preview">
-                <img
-                  src={fotoPerfil || "https://via.placeholder.com/150"}
-                  alt="Preview"
-                  style={{ objectFit: 'cover' }}
-                />
+                <img src={fotoPerfil || "https://via.placeholder.com/150"} alt="Preview" style={{ objectFit: 'cover' }} />
               </div>
-
               <label htmlFor="fotoInput" className="btn-upload">Alterar Foto</label>
               <input type="file" id="fotoInput" accept="image/*" onChange={handleFotoChange} hidden />
             </div>
 
+            {/* Nome */}
             <div className="input-group">
               <label>Como quer ser chamado?</label>
               <input
@@ -91,18 +87,29 @@ const SetupProfile = () => {
               />
             </div>
 
+            {/* Data de Nascimento */}
             <div className="input-group">
-              <label>Qual a sua data de nascimento? </label>
+              <label>Data de Nascimento</label>
               <input
                 type="date"
-                placeholder="Ex: 01/10/1995"
-                value={nomeExibicao}
-                onChange={(e) => setNomeExibicao(e.target.value)}
+                value={dataNascimento}
+                onChange={(e) => setDataNascimento(e.target.value)}
                 required
               />
             </div>
 
-            <button type="submit" className="btn-finalizar">Começar a cozinhar 🚀</button>
+            {/* Localização */}
+            <div className="input-group">
+              <label>Onde você mora? (Cidade/Estado)</label>
+              <input
+                type="text"
+                placeholder="Ex: São Paulo, SP"
+                value={localizacao}
+                onChange={(e) => setLocalizacao(e.target.value)}
+              />
+            </div>
+
+            <button type="submit" className="btn-finalizar">Começar a cozinhar </button>
           </form>
         </div>
       </main>
