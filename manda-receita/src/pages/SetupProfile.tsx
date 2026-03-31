@@ -75,7 +75,6 @@ const SetupProfile = () => {
               <input type="file" id="fotoInput" accept="image/*" onChange={handleFotoChange} hidden />
             </div>
 
-            {/* Nome */}
             <div className="input-group">
               <label>Como quer ser chamado?</label>
               <input
@@ -87,7 +86,6 @@ const SetupProfile = () => {
               />
             </div>
 
-            {/* Data de Nascimento */}
             <div className="input-group">
               <label>Data de Nascimento</label>
               <input
@@ -98,7 +96,7 @@ const SetupProfile = () => {
               />
             </div>
 
-            {/* Localização */}
+          
             <div className="input-group">
               <label>Onde você mora? (Cidade/Estado)</label>
               <input
@@ -109,7 +107,7 @@ const SetupProfile = () => {
               />
             </div>
 
-            <button type="submit" className="btn-finalizar">Começar a cozinhar </button>
+            <button type="submit" className="btn-finalizar">Começar a cozinhar</button>
           </form>
         </div>
       </main>
