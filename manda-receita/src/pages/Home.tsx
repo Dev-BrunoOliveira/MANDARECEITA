@@ -91,6 +91,7 @@ const Home = () => {
               <a href="#">Categorias</a>
               <a href="#">Minhas Receitas</a>
               <a href="#">Destaques</a>
+              <a href="#">Food Veggie</a>
             </div>
 
             <Link to="/setup-profile" className="nav-user">
