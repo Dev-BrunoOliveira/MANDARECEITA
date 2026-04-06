@@ -17,12 +17,10 @@ interface Receita {
 }
 
 const Home = () => {
-  const { user } = useAuth(); // Pegando os dados do usuário logado
+  const { user } = useAuth(); 
   const [isPostagemAberta, setIsPostagemAberta] = useState(false);
   const [isMenuAberto, setIsMenuAberto] = useState(false); 
   const [preview, setPreview] = useState<string | null>(null);
-
-  // Estados para o formulário
   const [novoTitulo, setNovoTitulo] = useState("");
   const [novaCategoria, setNovaCategoria] = useState("salgados");
   const [novosIngredientes, setNovosIngredientes] = useState("");
@@ -32,7 +30,7 @@ const Home = () => {
     {
       id: 1,
       chef: "Chef Erick Jacquin",
-      titulo: "Pudim de Leite Perfeito",
+      titulo: "Pudim de Leite",
       categoria: "Doces",
       imagem: "https://images.pexels.com/photos/2105104/pexels-photo-2105104.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       ingredientes: "- 1 lata de leite condensado, - 1 lata de leite, - 3 ovos inteiros",
