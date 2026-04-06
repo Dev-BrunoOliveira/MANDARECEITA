@@ -86,9 +86,8 @@ const Home = () => {
           <nav className={`header-nav ${isMenuAberto ? "active" : ""}`}>
             <div className="nav-links">
               <Link to="/principal">Página Inicial</Link>
-              <a href="#">Categorias</a>
+              <a href="#">Receitas Prontas</a>
               <a href="#">Minhas Receitas</a>
-              <a href="#">Destaques</a>
               <a href="#">Food Veggie</a>
             </div>
 
