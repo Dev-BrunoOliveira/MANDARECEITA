@@ -13,16 +13,14 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
 
-  // 1. Criamos o objeto do usuário
   const loggedUser = {
     id: 1,
     name: "Bruno Oliveira",
     username: "bruno",
     avatar: "https://i.pravatar.cc/150?img=3",
-    isProfileCompleted: false // Começa como false para cair no Setup
+    isProfileCompleted: false 
   };
 
-  // 2. SALVA NO CONTEXTO (para uso imediato)
   setUser(loggedUser);
 
   // 3. SALVA NO LOCALSTORAGE (para não perder ao navegar ou dar F5)
