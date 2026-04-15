@@ -5,11 +5,8 @@ import Header from "../components/Header";
 import "./Profile.css";
 
 const Profile = () => {
-  const { username } = useParams(); // ✅ AGORA CERTO
+  const { username } = useParams();
   const { user } = useAuth();
-
-  // Se no futuro username !== user.username
-  // você vai buscar outro perfil via API
 
   return (
     <div className="profile-page">
@@ -17,7 +14,6 @@ const Profile = () => {
 
       <div className="profile-container">
         <div className="profile-header">
-          
           <div className="profile-cover">
             <img
               src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg"
@@ -38,9 +34,7 @@ const Profile = () => {
               <div className="profile-text">
                 <h1>{user?.name || "Usuário"}</h1>
 
-                <p>
-                  Amante da culinária | @{username}
-                </p>
+                <p>Amante da culinária | @{username}</p>
               </div>
 
               <button className="btn-edit">Editar Perfil</button>
@@ -54,8 +48,12 @@ const Profile = () => {
           <aside className="profile-sidebar">
             <div className="profile-stats">
               <h4>Atividade</h4>
-              <p><span>0</span> Receitas</p>
-              <p><span>0</span> Seguidores</p>
+              <p>
+                <span>0</span> Receitas
+              </p>
+              <p>
+                <span>0</span> Seguidores
+              </p>
             </div>
           </aside>
 
@@ -64,9 +62,7 @@ const Profile = () => {
 
             <div className="no-recipes">
               <p>Você ainda não compartilhou nenhuma receita.</p>
-              <button className="btn-post-now">
-                Manda sua primeira!
-              </button>
+              <button className="btn-post-now">Manda sua primeira!</button>
             </div>
           </main>
         </div>
