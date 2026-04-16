@@ -23,20 +23,26 @@ const Profile = () => {
 
           <div className="profile-avatar-bar">
             <div className="profile-avatar-wrapper">
-              <img
-                src={user?.avatar || "https://via.placeholder.com/150"}
-                alt="Avatar"
-                className="profile-avatar-img"
-              />
+              {/* LÓGICA BLINDADA: Só renderiza <img> se houver avatar real */}
+              {user?.avatar ? (
+                <img 
+                  src={user.avatar} 
+                  alt="Avatar do Usuário" 
+                  className="profile-avatar-img" 
+                />
+              ) : (
+                <div className="avatar-placeholder-custom">
+                  <i className="fa-solid fa-user-chef"></i> {/* Ou fa-camera */}
+                  <span>Sua Foto</span>
+                </div>
+              )}
             </div>
 
             <div className="profile-info">
               <div className="profile-text">
                 <h1>{user?.name || "Usuário"}</h1>
-
                 <p>Amante da culinária | @{username}</p>
               </div>
-
               <button className="btn-edit">Editar Perfil</button>
             </div>
           </div>
@@ -48,18 +54,13 @@ const Profile = () => {
           <aside className="profile-sidebar">
             <div className="profile-stats">
               <h4>Atividade</h4>
-              <p>
-                <span>0</span> Receitas
-              </p>
-              <p>
-                <span>0</span> Seguidores
-              </p>
+              <p><span>0</span> Receitas</p>
+              <p><span>0</span> Seguidores</p>
             </div>
           </aside>
 
           <main className="profile-feed">
             <h3>Minhas Receitas</h3>
-
             <div className="no-recipes">
               <p>Você ainda não compartilhou nenhuma receita.</p>
               <button className="btn-post-now">Manda sua primeira!</button>
