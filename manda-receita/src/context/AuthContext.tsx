@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
-  id: number;
+  id: string;
   name: string;
-  username: string; // ⭐⭐⭐
-  avatar: string;
-  isProfileCompleted: boolean;
+  avatar: string | null;
+  cover?: string | null; 
+  username?: string;         
+  isProfileCompleted?: boolean; 
 }
 
 interface AuthContextType {

@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Header from "../components/Header";
@@ -8,32 +7,41 @@ const Profile = () => {
   const { username } = useParams();
   const { user } = useAuth();
 
+  // Lógica para decidir se mostramos a foto ou o estado vazio
+  // Usamos 'as string' para o TS entender que estamos tratando o valor
+  const hasAvatar = !!(
+    user?.avatar &&
+    typeof user.avatar === "string" &&
+    !user.avatar.includes("placeholder") &&
+    user.avatar.trim() !== ""
+  );
+
   return (
     <div className="profile-page">
       <Header />
 
       <div className="profile-container">
         <div className="profile-header">
+          {/* Capa */}
           <div className="profile-cover">
-            <img
-              src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg"
-              alt="Capa"
-            />
+            {user?.cover ? (
+              <img src={user.cover} alt="Capa do perfil" />
+            ) : (
+              <div className="profile-cover-empty"></div>
+            )}
           </div>
 
           <div className="profile-avatar-bar">
             <div className="profile-avatar-wrapper">
-              {/* LÓGICA BLINDADA: Só renderiza <img> se houver avatar real */}
-              {user?.avatar ? (
-                <img 
-                  src={user.avatar} 
-                  alt="Avatar do Usuário" 
-                  className="profile-avatar-img" 
+              {hasAvatar ? (
+                <img
+                  src={user?.avatar || ""} 
+                  alt={`Foto de ${user?.name}`}
+                  className="profile-avatar-img"
                 />
               ) : (
-                <div className="avatar-placeholder-custom">
-                  <i className="fa-solid fa-user-chef"></i> {/* Ou fa-camera */}
-                  <span>Sua Foto</span>
+                <div className="avatar-empty-state">
+                  <span>{user?.name?.charAt(0).toUpperCase() || "U"}</span>
                 </div>
               )}
             </div>
@@ -41,7 +49,7 @@ const Profile = () => {
             <div className="profile-info">
               <div className="profile-text">
                 <h1>{user?.name || "Usuário"}</h1>
-                <p>Amante da culinária | @{username}</p>
+                <p>@{username || "usuario"}</p>
               </div>
               <button className="btn-edit">Editar Perfil</button>
             </div>
