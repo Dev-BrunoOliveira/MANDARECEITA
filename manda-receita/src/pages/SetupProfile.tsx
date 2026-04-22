@@ -14,7 +14,6 @@ const SetupProfile = () => {
   const [nomeExibicao, setNomeExibicao] = useState(user?.name || "");
   const [dataNascimento, setDataNascimento] = useState("");
   const [localizacao, setLocalizacao] = useState("");
-  // Substituindo Bio por Status e Especialidade
   const [status, setStatus] = useState("");
   const [especialidade, setEspecialidade] = useState("Amador");
 
@@ -44,8 +43,8 @@ const SetupProfile = () => {
       avatar: fotoPerfil || user.avatar,
       dataNascimento,
       localizacao,
-      status, // Frase curta de perfil
-      especialidade, // Categoria do chef
+      status,
+      especialidade,
       isProfileCompleted: true,
     };
 
