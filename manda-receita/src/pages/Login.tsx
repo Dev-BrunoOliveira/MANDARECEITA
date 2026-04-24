@@ -22,9 +22,7 @@ const Login = () => {
   };
 
   setUser(loggedUser);
-
-  // 3. SALVA NO LOCALSTORAGE (para não perder ao navegar ou dar F5)
-  // O nome da chave deve ser EXATAMENTE o mesmo que está no AuthContext
+/*testando as possibilidades de login*/ 
   localStorage.setItem("@MandaReceita:user", JSON.stringify(loggedUser));
 
   // 4. AGORA SIM, NAVEGA
