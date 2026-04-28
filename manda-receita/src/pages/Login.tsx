@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
 
     const loggedUser = {
-      id: 1,
+      id: "1",
       name: "Bruno Oliveira",
       username: "bruno",
       avatar: "https://i.pravatar.cc/150?img=3",
