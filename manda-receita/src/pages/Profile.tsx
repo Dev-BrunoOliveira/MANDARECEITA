@@ -64,6 +64,7 @@ const Profile = () => {
               <h4>Atividade</h4>
               <p><span>0</span> Receitas</p>
               <p><span>0</span> Seguidores</p>
+              <p><span>0</span> Seguindo</p>
             </div>
           </aside>
 
