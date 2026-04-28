@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; 
-import './Login.css';
-import { useAuth } from "../context/AuthContext"
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./Login.css";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,29 +11,30 @@ const Login = () => {
   const togglePassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const loggedUser = {
-    id: 1,
-    name: "Bruno Oliveira",
-    username: "bruno",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    isProfileCompleted: false 
+    const loggedUser = {
+      id: 1,
+      name: "Bruno Oliveira",
+      username: "bruno",
+      avatar: "https://i.pravatar.cc/150?img=3",
+      isProfileCompleted: false,
+    };
+
+    setUser(loggedUser);
+    localStorage.setItem("@MandaReceita:user", JSON.stringify(loggedUser));
+
+    navigate("/principal");
   };
-
-  setUser(loggedUser);
-/*testando as possibilidades de login*/ 
-  localStorage.setItem("@MandaReceita:user", JSON.stringify(loggedUser));
-
-  // 4. AGORA SIM, NAVEGA
-  navigate("/principal");
-};
 
   return (
     <div className="login-container">
       <div className="background-section">
         <div className="welcome-text">
-          <h1>Descubra e compartilhe <br />suas receitas favoritas</h1>
+          <h1>
+            Descubra e compartilhe <br />
+            suas receitas favoritas
+          </h1>
           <p>Entre para um mundo de sabores!</p>
         </div>
       </div>
@@ -48,14 +49,9 @@ const Login = () => {
           <form id="loginForm" onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                placeholder="Seu email"
-                required
-              />
+              <input type="email" id="email" placeholder="Seu email" required />
             </div>
-            
+
             <div className="input-group">
               <label htmlFor="password">Senha</label>
               <input
@@ -65,12 +61,18 @@ const Login = () => {
                 required
               />
               <span className="toggle-password" onClick={togglePassword}>
-                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                <i
+                  className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                ></i>
               </span>
             </div>
 
-            <a href="#" className="forgot-password">Esqueceu sua senha?</a>
-            <button type="submit" className="btn btn-login">Entrar</button>
+            <a href="#" className="forgot-password">
+              Esqueceu sua senha?
+            </a>
+            <button type="submit" className="btn btn-login">
+              Entrar
+            </button>
           </form>
 
           <div className="separator">OU</div>
@@ -80,13 +82,15 @@ const Login = () => {
           </button>
 
           <div className="terms">
-            Ao continuar, você concorda com os <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a>.
+            Ao continuar, você concorda com os <a href="#">Termos de Serviço</a>{" "}
+            e <a href="#">Política de Privacidade</a>.
           </div>
 
           <hr className="form-divider" />
 
           <div className="signup-link">
-            Ainda não está no Manda Receita? <Link to="/register">Crie uma conta</Link>
+            Ainda não está no Manda Receita?{" "}
+            <Link to="/register">Crie uma conta</Link>
           </div>
         </div>
       </div>
