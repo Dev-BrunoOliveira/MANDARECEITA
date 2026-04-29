@@ -20,6 +20,12 @@ const Login = () => {
       avatar: "https://i.pravatar.cc/150?img=3",
       isProfileCompleted: false,
     };
+    const loggedUser = { //remover depois essa cost que eu estava testando
+      id: '2',
+      name: "Larissa Dedis",
+      username: "LrsDedis",
+      isProfileCompleted: false,
+     };
 
     setUser(loggedUser);
     localStorage.setItem("@MandaReceita:user", JSON.stringify(loggedUser));
