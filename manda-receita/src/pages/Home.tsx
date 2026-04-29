@@ -88,6 +88,8 @@ const Home = () => {
               <Link to="/principal">Página Inicial</Link>
               <a href="#">Minhas Receitas</a>
               <a href="#">Food Veggie</a>
+              <a href="#">Churrasco Love</a>
+              <a href="#">Sobremesas</a>
             </div>
 
             <Link to="/setup-profile" className="nav-user">
