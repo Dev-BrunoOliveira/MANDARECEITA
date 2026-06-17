@@ -3,19 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Manda Receita - Seu feed de receitas. Compartilhe, curta e comente receitas incríveis." />
+    <meta
+      name="description"
+      content="Manda Receita - Seu feed de receitas. Compartilhe, curta e comente receitas incríveis."
+    />
     <title>Manda Receita - Feed</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container"></div>
 
-    <!-- ===== HEADER / NAVBAR ===== -->
     <header id="mainHeader">
       <div class="header-left">
         <a href="principal.html" class="header-logo">
@@ -26,7 +33,11 @@
       <div class="header-center">
         <div class="search-bar">
           <i class="fas fa-search"></i>
-          <input type="text" id="searchInput" placeholder="Buscar receitas, pessoas..." />
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar receitas, pessoas..."
+          />
         </div>
       </div>
       <div class="header-right">
@@ -35,33 +46,52 @@
           <span class="badge">3</span>
         </button>
         <div class="header-user-menu" id="headerUserMenu">
-          <img src="https://i.pravatar.cc/36?u=me" alt="Meu perfil" class="header-avatar" id="headerAvatar" />
+          <img
+            src="https://i.pravatar.cc/36?u=me"
+            alt="Meu perfil"
+            class="header-avatar"
+            id="headerAvatar"
+          />
           <span class="header-username" id="headerUsername">Usuário</span>
           <i class="fas fa-chevron-down"></i>
-          <!-- Dropdown menu -->
+
           <div class="user-dropdown" id="userDropdown">
-            <a href="#" id="btnEditProfile"><i class="fas fa-user-pen"></i> Editar Perfil</a>
-            <a href="#" id="btnSettings"><i class="fas fa-gear"></i> Configurações</a>
+            <a href="#" id="btnEditProfile"
+              ><i class="fas fa-user-pen"></i> Editar Perfil</a
+            >
+            <a href="#" id="btnSettings"
+              ><i class="fas fa-gear"></i> Configurações</a
+            >
             <hr />
-            <a href="#" id="btnLogout"><i class="fas fa-right-from-bracket"></i> Sair</a>
+            <a href="#" id="btnLogout"
+              ><i class="fas fa-right-from-bracket"></i> Sair</a
+            >
           </div>
         </div>
       </div>
     </header>
 
-    <!-- ===== MAIN LAYOUT ===== -->
     <main>
-      <!-- LEFT SIDEBAR -->
       <aside class="sidebar sidebar-left">
-        <!-- Profile Card -->
         <div class="profile-card" id="profileCard">
           <div class="profile-cover">
-            <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Capa" id="profileCoverImg" />
+            <img
+              src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="Capa"
+              id="profileCoverImg"
+            />
           </div>
           <div class="profile-info">
-            <img src="https://i.pravatar.cc/80?u=me" alt="Foto de perfil" class="profile-avatar" id="profileAvatar" />
+            <img
+              src="https://i.pravatar.cc/80?u=me"
+              alt="Foto de perfil"
+              class="profile-avatar"
+              id="profileAvatar"
+            />
             <h3 id="profileName">Usuário</h3>
-            <p class="profile-bio" id="profileBio">Apaixonado(a) por culinária 🍳</p>
+            <p class="profile-bio" id="profileBio">
+              Apaixonado(a) por culinária 🍳
+            </p>
             <div class="profile-stats">
               <div class="stat">
                 <strong id="statReceitas">0</strong>
@@ -75,18 +105,26 @@
           </div>
         </div>
 
-        <!-- Navigation -->
         <nav class="sidebar-nav">
           <h4>Navegação</h4>
           <ul>
-            <li><a href="#" class="active"><i class="fas fa-house"></i> Página Inicial</a></li>
-            <li><a href="#"><i class="fas fa-fire"></i> Em Alta</a></li>
-            <li><a href="#"><i class="fas fa-bookmark"></i> Salvos</a></li>
-            <li><a href="#"><i class="fas fa-clock-rotate-left"></i> Recentes</a></li>
+            <li>
+              <a href="#" class="active"
+                ><i class="fas fa-house"></i> Página Inicial</a
+              >
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-fire"></i> Em Alta</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-bookmark"></i> Salvos</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-clock-rotate-left"></i> Recentes</a>
+            </li>
           </ul>
         </nav>
 
-        <!-- Categories -->
         <div class="sidebar-categories">
           <h4>Categorias</h4>
           <div class="category-tags">
@@ -95,38 +133,42 @@
             <span class="tag" data-category="doces">🍰 Doces</span>
             <span class="tag" data-category="entradas">🥗 Entradas</span>
             <span class="tag" data-category="sobremesas">🍮 Sobremesas</span>
-            <span class="tag" data-category="prato-principal">🍖 Prato Principal</span>
+            <span class="tag" data-category="prato-principal"
+              >🍖 Prato Principal</span
+            >
             <span class="tag" data-category="caldos">🍲 Caldos & Sopas</span>
           </div>
         </div>
       </aside>
 
-      <!-- CENTER FEED -->
       <div class="main-feed">
-        <!-- Create Post Box -->
         <div class="create-post-box" id="createPostBox">
           <div class="create-post-header">
-            <img src="https://i.pravatar.cc/40?u=me" alt="Sua foto" class="create-post-avatar" id="createPostAvatar" />
+            <img
+              src="https://i.pravatar.cc/40?u=me"
+              alt="Sua foto"
+              class="create-post-avatar"
+              id="createPostAvatar"
+            />
             <button class="create-post-trigger" id="openRecipeModal">
               <span>Compartilhe uma receita...</span>
             </button>
           </div>
           <div class="create-post-actions">
             <button class="create-action-btn" id="openRecipeModalPhoto">
-              <i class="fas fa-image" style="color: #2ecc71;"></i>
+              <i class="fas fa-image" style="color: #2ecc71"></i>
               <span>Foto</span>
             </button>
             <button class="create-action-btn" id="openRecipeModalRecipe">
-              <i class="fas fa-utensils" style="color: #e67e22;"></i>
+              <i class="fas fa-utensils" style="color: #e67e22"></i>
               <span>Receita</span>
             </button>
           </div>
         </div>
 
-        <!-- Feed -->
         <section class="feed-receitas">
           <div id="containerReceitas" class="container-receitas"></div>
-          <div class="feed-empty" id="feedEmpty" style="display: none;">
+          <div class="feed-empty" id="feedEmpty" style="display: none">
             <i class="fas fa-seedling"></i>
             <h3>Nenhuma receita ainda</h3>
             <p>Seja o primeiro a compartilhar uma receita!</p>
@@ -134,7 +176,6 @@
         </section>
       </div>
 
-      <!-- RIGHT SIDEBAR -->
       <aside class="sidebar sidebar-right">
         <div class="trending-section">
           <h4><i class="fas fa-fire-flame-curved"></i> Receitas em Alta</h4>
@@ -200,27 +241,43 @@
       </aside>
     </main>
 
-    <!-- ===== MODAL: NOVA RECEITA ===== -->
     <div class="modal-overlay" id="recipeModalOverlay">
       <div class="modal" id="recipeModal">
         <div class="modal-header">
           <h2>Criar Receita</h2>
-          <button class="modal-close" id="closeRecipeModal"><i class="fas fa-xmark"></i></button>
+          <button class="modal-close" id="closeRecipeModal">
+            <i class="fas fa-xmark"></i>
+          </button>
         </div>
         <div class="modal-body">
           <div class="modal-user-info">
-            <img src="https://i.pravatar.cc/40?u=me" alt="Sua foto" class="modal-avatar" id="modalAvatar" />
+            <img
+              src="https://i.pravatar.cc/40?u=me"
+              alt="Sua foto"
+              class="modal-avatar"
+              id="modalAvatar"
+            />
             <span class="modal-username" id="modalUsername">Usuário</span>
           </div>
           <form id="formNovaReceita">
             <div class="form-group">
-              <label for="tituloReceita"><i class="fas fa-heading"></i> Título da Receita</label>
-              <input type="text" id="tituloReceita" name="tituloReceita" placeholder="Ex: Bolo de Chocolate Perfeito" required />
+              <label for="tituloReceita"
+                ><i class="fas fa-heading"></i> Título da Receita</label
+              >
+              <input
+                type="text"
+                id="tituloReceita"
+                name="tituloReceita"
+                placeholder="Ex: Bolo de Chocolate Perfeito"
+                required
+              />
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label for="categoriaReceita"><i class="fas fa-tag"></i> Categoria</label>
+                <label for="categoriaReceita"
+                  ><i class="fas fa-tag"></i> Categoria</label
+                >
                 <select id="categoriaReceita" name="categoriaReceita">
                   <option value="salgados">🥘 Salgados</option>
                   <option value="doces">🍰 Doces</option>
@@ -232,34 +289,68 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="tempoPreparo"><i class="fas fa-clock"></i> Tempo de Preparo</label>
-                <input type="text" id="tempoPreparo" name="tempoPreparo" placeholder="Ex: 45 min" />
+                <label for="tempoPreparo"
+                  ><i class="fas fa-clock"></i> Tempo de Preparo</label
+                >
+                <input
+                  type="text"
+                  id="tempoPreparo"
+                  name="tempoPreparo"
+                  placeholder="Ex: 45 min"
+                />
               </div>
             </div>
 
             <div class="form-group">
-              <label for="ingredientes"><i class="fas fa-list-check"></i> Ingredientes</label>
-              <textarea id="ingredientes" name="ingredientes" rows="5"
+              <label for="ingredientes"
+                ><i class="fas fa-list-check"></i> Ingredientes</label
+              >
+              <textarea
+                id="ingredientes"
+                name="ingredientes"
+                rows="5"
                 placeholder="- 1 xícara de farinha&#10;- 2 ovos&#10;- 1/2 xícara de açúcar"
-                required></textarea>
+                required
+              ></textarea>
             </div>
 
             <div class="form-group">
-              <label for="modoPreparo"><i class="fas fa-fire-burner"></i> Modo de Preparo</label>
-              <textarea id="modoPreparo" name="modoPreparo" rows="6"
+              <label for="modoPreparo"
+                ><i class="fas fa-fire-burner"></i> Modo de Preparo</label
+              >
+              <textarea
+                id="modoPreparo"
+                name="modoPreparo"
+                rows="6"
                 placeholder="1. Misture os ingredientes secos.&#10;2. Adicione os ovos e o leite.&#10;3. Asse por 40 minutos."
-                required></textarea>
+                required
+              ></textarea>
             </div>
 
             <div class="form-group">
-              <label for="fotoVideoReceita"><i class="fas fa-camera"></i> Foto da Receita</label>
+              <label for="fotoVideoReceita"
+                ><i class="fas fa-camera"></i> Foto da Receita</label
+              >
               <div class="file-upload-area" id="fileUploadArea">
-                <input type="file" id="fotoVideoReceita" name="fotoVideoReceita" accept="image/*" />
+                <input
+                  type="file"
+                  id="fotoVideoReceita"
+                  name="fotoVideoReceita"
+                  accept="image/*"
+                />
                 <div class="file-upload-placeholder" id="fileUploadPlaceholder">
                   <i class="fas fa-cloud-arrow-up"></i>
-                  <p>Arraste uma foto ou <strong>clique para selecionar</strong></p>
+                  <p>
+                    Arraste uma foto ou <strong>clique para selecionar</strong>
+                  </p>
                 </div>
-                <img id="previewImagem" src="#" alt="Preview" class="file-preview-img" style="display: none;" />
+                <img
+                  id="previewImagem"
+                  src="#"
+                  alt="Preview"
+                  class="file-preview-img"
+                  style="display: none"
+                />
               </div>
             </div>
 
@@ -272,19 +363,27 @@
       </div>
     </div>
 
-    <!-- ===== MODAL: EDITAR PERFIL ===== -->
     <div class="modal-overlay" id="profileModalOverlay">
       <div class="modal modal-profile" id="profileModal">
         <div class="modal-header">
           <h2>Editar Perfil</h2>
-          <button class="modal-close" id="closeProfileModal"><i class="fas fa-xmark"></i></button>
+          <button class="modal-close" id="closeProfileModal">
+            <i class="fas fa-xmark"></i>
+          </button>
         </div>
         <div class="modal-body">
           <form id="formEditProfile">
             <div class="form-group">
-              <label for="editProfilePhoto"><i class="fas fa-camera"></i> Foto de Perfil</label>
+              <label for="editProfilePhoto"
+                ><i class="fas fa-camera"></i> Foto de Perfil</label
+              >
               <div class="profile-photo-edit">
-                <img src="https://i.pravatar.cc/80?u=me" alt="Foto atual" class="edit-profile-avatar" id="editProfileAvatarPreview" />
+                <img
+                  src="https://i.pravatar.cc/80?u=me"
+                  alt="Foto atual"
+                  class="edit-profile-avatar"
+                  id="editProfileAvatarPreview"
+                />
                 <input type="file" id="editProfilePhoto" accept="image/*" />
                 <label for="editProfilePhoto" class="btn-change-photo">
                   <i class="fas fa-pen"></i>
@@ -296,12 +395,24 @@
               <input type="text" id="editName" placeholder="Seu nome" />
             </div>
             <div class="form-group">
-              <label for="editBio"><i class="fas fa-pen-fancy"></i> Biografia</label>
-              <textarea id="editBio" rows="3" placeholder="Conte um pouco sobre você e sua paixão pela culinária..."></textarea>
+              <label for="editBio"
+                ><i class="fas fa-pen-fancy"></i> Biografia</label
+              >
+              <textarea
+                id="editBio"
+                rows="3"
+                placeholder="Conte um pouco sobre você e sua paixão pela culinária..."
+              ></textarea>
             </div>
             <div class="form-group">
-              <label for="editLocation"><i class="fas fa-location-dot"></i> Localização</label>
-              <input type="text" id="editLocation" placeholder="Ex: São Paulo, SP" />
+              <label for="editLocation"
+                ><i class="fas fa-location-dot"></i> Localização</label
+              >
+              <input
+                type="text"
+                id="editLocation"
+                placeholder="Ex: São Paulo, SP"
+              />
             </div>
             <button type="submit" class="btn-publicar">
               <i class="fas fa-check"></i>
@@ -312,7 +423,6 @@
       </div>
     </div>
 
-    <!-- ===== FOOTER ===== -->
     <footer>
       <div class="footer-content">
         <div class="footer-logo">🍳 Manda Receita</div>
