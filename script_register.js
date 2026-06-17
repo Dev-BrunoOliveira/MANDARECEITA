@@ -1,60 +1,158 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const registerForm = document.getElementById('registerForm');
+// ===== TOAST NOTIFICATION SYSTEM =====
+function showToast(message, type = "info", duration = 3000) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
-    if (registerForm) {
-        registerForm.addEventListener('submit', (event) => {
-            event.preventDefault(); 
+  const icons = {
+    success: '<i class="fas fa-check-circle"></i>',
+    error: '<i class="fas fa-exclamation-circle"></i>',
+    info: '<i class="fas fa-info-circle"></i>',
+  };
 
-            const fullName = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const agreeTerms = document.getElementById('agreeTerms').checked;
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `${icons[type] || icons.info} <span>${message}</span>`;
+  container.appendChild(toast);
 
-            
-            if (!fullName || !email || !password || !confirmPassword) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                alert('As senhas não coincidem!');
-                return;
-            }
-
-            if (password.length < 6) { 
-                alert('A senha deve ter pelo menos 6 caracteres.');
-                return;
-            }
-
-            if (!agreeTerms) {
-                alert('Você precisa concordar com os Termos de Serviço e Política de Privacidade.');
-                return;
-            }
-
-            console.log('Dados do formulário de registro:', { fullName, email, password });
-            alert('Validação front-end OK! Enviando para o backend (simulação)...');
-        });
-    }
-
-    const googleSignUpButton = document.getElementById('googleSignUpButton');
-    if (googleSignUpButton) {
-        googleSignUpButton.addEventListener('click', () => {
-            alert('Cadastro com Google a ser implementado com OAuth! (ver script_index.js para exemplo de chamada)');
-        });
-    }
-});
-
-function togglePasswordVisibility(inputId, iconId) {
-    const passwordInput = document.getElementById(inputId);
-    const icon = document.getElementById(iconId);
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
+  setTimeout(() => {
+    toast.classList.add("hide");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
 }
+
+// ===== TOGGLE PASSWORD =====
+function togglePasswordVisibility(inputId, iconId) {
+  const passwordInput = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (!passwordInput) return;
+
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    if (icon) {
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    }
+  } else {
+    passwordInput.type = "password";
+    if (icon) {
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    }
+  }
+}
+
+// ===== REGISTER FORM =====
+document.addEventListener("DOMContentLoaded", () => {
+  const registerForm = document.getElementById("registerForm");
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const fullNameInput = document.getElementById("fullName");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const agreeTerms = document.getElementById("agreeTerms");
+
+      const fullName = fullNameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      // Clear previous errors
+      [fullNameInput, emailInput, passwordInput, confirmPasswordInput].forEach(
+        (i) => i.classList.remove("error")
+      );
+
+      if (!fullName) {
+        fullNameInput.classList.add("error");
+        showToast("Por favor, preencha seu nome.", "error");
+        fullNameInput.focus();
+        return;
+      }
+
+      if (!email) {
+        emailInput.classList.add("error");
+        showToast("Por favor, preencha o email.", "error");
+        emailInput.focus();
+        return;
+      }
+
+      if (!password) {
+        passwordInput.classList.add("error");
+        showToast("Por favor, preencha a senha.", "error");
+        passwordInput.focus();
+        return;
+      }
+
+      if (password.length < 6) {
+        passwordInput.classList.add("error");
+        showToast("A senha deve ter pelo menos 6 caracteres.", "error");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        confirmPasswordInput.classList.add("error");
+        showToast("As senhas não coincidem!", "error");
+        confirmPasswordInput.focus();
+        return;
+      }
+
+      if (!agreeTerms.checked) {
+        showToast(
+          "Você precisa concordar com os Termos de Serviço.",
+          "error"
+        );
+        return;
+      }
+
+      // Save user data
+      const userData = {
+        name: fullName,
+        email: email,
+        bio: "Apaixonado(a) por culinária 🍳",
+        location: "",
+        profilePhoto: "",
+      };
+
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      showToast("Conta criada com sucesso! Faça login.", "success");
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1200);
+    });
+  }
+
+  // Google Sign Up (simulation)
+  const googleSignUpButton = document.getElementById("googleSignUpButton");
+  if (googleSignUpButton) {
+    googleSignUpButton.addEventListener("click", () => {
+      const userData = {
+        name: "Usuário Google",
+        email: "usuario@gmail.com",
+        bio: "Conectado via Google 🍳",
+        location: "",
+        profilePhoto: "",
+      };
+
+      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("isLoggedIn", "true");
+
+      showToast("Cadastro com Google realizado!", "success");
+
+      setTimeout(() => {
+        window.location.href = "principal.html";
+      }, 800);
+    });
+  }
+
+  // Remove error class on focus
+  document.querySelectorAll(".input-group input").forEach((input) => {
+    input.addEventListener("focus", () => {
+      input.classList.remove("error");
+    });
+  });
+});

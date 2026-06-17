@@ -1,138 +1,132 @@
-// script_index.js (anteriormente script_login.js)
+// ===== TOAST NOTIFICATION SYSTEM =====
+function showToast(message, type = "info", duration = 3000) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
 
+  const icons = {
+    success: '<i class="fas fa-check-circle"></i>',
+    error: '<i class="fas fa-exclamation-circle"></i>',
+    info: '<i class="fas fa-info-circle"></i>',
+  };
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `${icons[type] || icons.info} <span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("hide");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+// ===== TOGGLE PASSWORD =====
+function togglePasswordVisibility(inputId, iconId) {
+  const passwordInput = document.getElementById(inputId || "password");
+  const iconElement = document.getElementById(iconId);
+
+  if (!passwordInput) return;
+
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    if (iconElement) {
+      iconElement.classList.remove("fa-eye");
+      iconElement.classList.add("fa-eye-slash");
+    }
+  } else {
+    passwordInput.type = "password";
+    if (iconElement) {
+      iconElement.classList.remove("fa-eye-slash");
+      iconElement.classList.add("fa-eye");
+    }
+  }
+}
+
+// ===== LOGIN FORM =====
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
+  const googleLoginButton = document.getElementById("googleLoginButton");
 
   if (loginForm) {
     loginForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
 
-      if (email && password) {
+      // Clear previous errors
+      emailInput.classList.remove("error");
+      passwordInput.classList.remove("error");
+
+      if (!email) {
+        emailInput.classList.add("error");
+        showToast("Por favor, preencha o email.", "error");
+        emailInput.focus();
+        return;
+      }
+
+      if (!password) {
+        passwordInput.classList.add("error");
+        showToast("Por favor, preencha a senha.", "error");
+        passwordInput.focus();
+        return;
+      }
+
+      if (password.length < 6) {
+        passwordInput.classList.add("error");
+        showToast("A senha deve ter pelo menos 6 caracteres.", "error");
+        return;
+      }
+
+      // Save user data
+      const userName = email.split("@")[0];
+      const capitalizedName =
+        userName.charAt(0).toUpperCase() + userName.slice(1);
+
+      const userData = JSON.parse(localStorage.getItem("userData")) || {};
+      userData.email = email;
+      if (!userData.name) userData.name = capitalizedName;
+      if (!userData.bio) userData.bio = "Apaixonado(a) por culinária 🍳";
+      if (!userData.location) userData.location = "";
+      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("isLoggedIn", "true");
+
+      showToast("Login realizado com sucesso!", "success");
+
+      setTimeout(() => {
         window.location.href = "principal.html";
-      } else {
-        alert("Por favor, preencha email e senha.");
-      }
+      }, 800);
     });
   }
-});
 
-// --- GOOGLE LOGIN (Simulação e Redirecionamento) ---
-const GOOGLE_CLIENT_ID = "SEU_ID_DE_CLIENTE_DO_GOOGLE_AQUI"; // Mantenha seu ID aqui se for usar
+  // Google Login (simulation)
+  if (googleLoginButton) {
+    googleLoginButton.addEventListener("click", () => {
+      const userData = {
+        name: "Usuário Google",
+        email: "usuario@gmail.com",
+        bio: "Conectado via Google 🍳",
+        location: "",
+        profilePhoto: "",
+      };
 
-function initGoogleSignIn() {
-  if (typeof gapi !== "undefined") {
-    gapi.load("auth2", function () {
-      const auth2 = gapi.auth2
-        .init({
-          // Guardar a instância do auth2
-          client_id: GOOGLE_CLIENT_ID,
-          scope: "profile email openid",
-        })
-        .then(() => {
-          console.log("Google API initialized for login page.");
-          // Anexa o evento ao botão de login com Google na página de login
-          const googleLoginButton = document.querySelector(".btn-google");
-          if (googleLoginButton) {
-            attachGoogleSignIn(googleLoginButton, auth2); // Passa a instância auth2
-          } else {
-            console.warn("Botão de login com Google não encontrado na página.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error initializing Google API:", error);
-        });
+      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("isLoggedIn", "true");
+
+      showToast("Login com Google realizado!", "success");
+
+      setTimeout(() => {
+        window.location.href = "principal.html";
+      }, 800);
     });
-  } else {
-    console.error("Google API script (platform.js) not loaded yet.");
   }
-}
 
-function attachGoogleSignIn(element, auth2Instance) {
-  if (!element || !auth2Instance) return;
-
-  element.addEventListener("click", function () {
-    auth2Instance
-      .signIn()
-      .then(function (googleUser) {
-        const profile = googleUser.getBasicProfile();
-        alert(
-          `Login simulado com Google (Usuário: ${profile.getName()})! Redirecionando...`
-        );
-        window.location.href = "recipes.html";
-      })
-      .catch(function (error) {
-        console.error("Google Sign-In error:", error);
-        if (error.error === "popup_closed_by_user") {
-          alert("Você fechou a janela de login do Google.");
-        } else if (error.error === "access_denied") {
-          alert("Você negou o acesso à sua conta Google.");
-        } else {
-          alert(
-            "Erro ao tentar fazer login com o Google. Verifique o console."
-          );
-        }
-      });
+  // Remove error class on input focus
+  document.querySelectorAll(".input-group input").forEach((input) => {
+    input.addEventListener("focus", () => {
+      input.classList.remove("error");
+    });
   });
-}
-
-function togglePasswordVisibility(inputId, iconId) {
-  const passwordInput = document.getElementById(inputId || "password");
-  const iconElement = document.getElementById(iconId);
-
-  if (!passwordInput || !iconElement) {
-    return;
-  }
-
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    iconElement.classList.remove("fa-eye");
-    iconElement.classList.add("fa-eye-slash");
-  } else {
-    passwordInput.type = "password";
-    iconElement.classList.remove("fa-eye-slash");
-    iconElement.classList.add("fa-eye");
-  }
-}
-
-// Chamar initGoogleSignIn quando o DOM estiver pronto e a API do Google carregada
-// Uma forma mais segura de garantir que `gapi` esteja carregado antes de chamar `initGoogleSignIn`
-// é usar o callback `onload` no script do Google.
-// No seu HTML (novo index.html, antigo login.html):
-// <script src="https://apis.google.com/js/platform.js?onload=onGoogleApiLoad" async defer></script>
-// E então definir a função global:
-/*
-function onGoogleApiLoad() {
-    console.log('Google API successfully loaded via onload callback.');
-    initGoogleSignIn();
-}
-*/
-// Se não usar o callback onload, a chamada abaixo pode ser feita,
-// mas é menos garantido que gapi estará pronto imediatamente.
-document.addEventListener("DOMContentLoaded", () => {
-  // Tenta inicializar o Google Sign-In.
-  // É melhor usar o callback onload=onGoogleApiLoad como descrito acima.
-  // Se não, pode haver uma condição de corrida onde gapi ainda não está definido.
-  if (typeof gapi !== "undefined" && gapi.auth2) {
-    // Verifica se auth2 já foi carregado
-    initGoogleSignIn();
-  } else if (typeof gapi !== "undefined") {
-    initGoogleSignIn();
-  } else {
-    console.log(
-      "DOMContentLoaded: Tentando initGoogleSignIn. Use o callback onload para maior robustez."
-    );
-
-    setTimeout(() => {
-      if (typeof gapi !== "undefined") {
-        initGoogleSignIn();
-      } else {
-        console.error(
-          "gapi ainda não está definido após DOMContentLoaded e timeout. Verifique o carregamento do script do Google e use o callback onload."
-        );
-      }
-    }, 500);
-  }
 });
