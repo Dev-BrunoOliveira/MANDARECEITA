@@ -41,10 +41,58 @@
         </div>
       </div>
       <div class="header-right">
-        <button class="header-btn" id="btnNotifications" title="Notificações">
-          <i class="fas fa-bell"></i>
-          <span class="badge">3</span>
-        </button>
+        <div class="notifications-wrapper" id="notificationsWrapper">
+          <button class="header-btn" id="btnNotifications" title="Notificações">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="notifBadge">3</span>
+          </button>
+          <div class="notifications-dropdown" id="notificationsDropdown">
+            <div class="notif-header">
+              <h4>Notificações</h4>
+              <button class="notif-mark-read" id="markAllRead">Marcar todas como lidas</button>
+            </div>
+            <div class="notif-list" id="notifList">
+              <div class="notif-item unread">
+                <img src="https://i.pravatar.cc/36?u=chef1" alt="Ana" />
+                <div class="notif-content">
+                  <p><strong>Ana Cozinha</strong> curtiu sua receita <strong>Pudim de Leite Perfeito</strong></p>
+                  <span class="notif-time"><i class="fas fa-clock"></i> 2 min atrás</span>
+                </div>
+                <span class="notif-dot"></span>
+              </div>
+              <div class="notif-item unread">
+                <img src="https://i.pravatar.cc/36?u=chef2" alt="Carlos" />
+                <div class="notif-content">
+                  <p><strong>Chef Carlos</strong> comentou: "Receita incrível! Vou fazer hoje mesmo 🔥"</p>
+                  <span class="notif-time"><i class="fas fa-clock"></i> 15 min atrás</span>
+                </div>
+                <span class="notif-dot"></span>
+              </div>
+              <div class="notif-item unread">
+                <img src="https://i.pravatar.cc/36?u=chef3" alt="Maria" />
+                <div class="notif-content">
+                  <p><strong>Maria Doces</strong> começou a seguir você</p>
+                  <span class="notif-time"><i class="fas fa-clock"></i> 1h atrás</span>
+                </div>
+                <span class="notif-dot"></span>
+              </div>
+              <div class="notif-item">
+                <img src="https://i.pravatar.cc/36?u=jacquin" alt="Jacquin" />
+                <div class="notif-content">
+                  <p><strong>Chef Jacquin</strong> curtiu sua receita <strong>Bolo de Chocolate</strong></p>
+                  <span class="notif-time"><i class="fas fa-clock"></i> 3h atrás</span>
+                </div>
+              </div>
+              <div class="notif-item">
+                <img src="https://i.pravatar.cc/36?u=chef1" alt="Ana" />
+                <div class="notif-content">
+                  <p><strong>Ana Cozinha</strong> compartilhou sua receita</p>
+                  <span class="notif-time"><i class="fas fa-clock"></i> 5h atrás</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="header-user-menu" id="headerUserMenu">
           <img
             src="https://i.pravatar.cc/36?u=me"
@@ -417,6 +465,36 @@
             <button type="submit" class="btn-publicar">
               <i class="fas fa-check"></i>
               Salvar Perfil
+            </button>
+          </form>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- ===== MODAL: CONFIGURAÇÕES ===== -->
+    <div class="modal-overlay" id="settingsModalOverlay">
+      <div class="modal modal-profile" id="settingsModal">
+        <div class="modal-header">
+          <h2>Configurações</h2>
+          <button class="modal-close" id="closeSettingsModal">
+            <i class="fas fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="formSettings">
+            <div class="form-group" style="display: flex; align-items: center; justify-content: space-between;">
+              <label for="themeToggle" style="margin-bottom: 0;"><i class="fas fa-moon"></i> Modo Escuro</label>
+              <input type="checkbox" id="themeToggle" style="width: 20px; height: 20px; accent-color: var(--primary);" />
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; justify-content: space-between;">
+              <label for="notifToggle" style="margin-bottom: 0;"><i class="fas fa-bell"></i> Notificações por Email</label>
+              <input type="checkbox" id="notifToggle" checked style="width: 20px; height: 20px; accent-color: var(--primary);" />
+            </div>
+            <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 20px 0;" />
+            <button type="submit" class="btn-publicar">
+              <i class="fas fa-check"></i>
+              Salvar Configurações
             </button>
           </form>
         </div>

@@ -41,6 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnEditProfile = document.getElementById("btnEditProfile");
   const formEditProfile = document.getElementById("formEditProfile");
 
+  // Settings modal
+  const settingsModalOverlay = document.getElementById("settingsModalOverlay");
+  const closeSettingsModalBtn = document.getElementById("closeSettingsModal");
+  const btnSettings = document.getElementById("btnSettings");
+  const formSettings = document.getElementById("formSettings");
+
   // Header
   const headerUserMenu = document.getElementById("headerUserMenu");
   const btnLogout = document.getElementById("btnLogout");
@@ -113,17 +119,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const currentUser = loadUserData();
 
+  // ===== DEFAULT FOOD IMAGES (for posts without photos) =====
+  const defaultFoodImages = [
+    "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "https://images.pexels.com/photos/357573/pexels-photo-357573.jpeg?auto=compress&cs=tinysrgb&w=800",
+  ];
+
+  function getRandomFoodImage() {
+    return defaultFoodImages[Math.floor(Math.random() * defaultFoodImages.length)];
+  }
+
   // ===== HEADER DROPDOWN =====
   if (headerUserMenu) {
     headerUserMenu.addEventListener("click", (e) => {
       e.stopPropagation();
       headerUserMenu.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      headerUserMenu.classList.remove("open");
+      // Close notifications if open
+      const notifDropdown = document.getElementById("notificationsDropdown");
+      if (notifDropdown) notifDropdown.classList.remove("open");
     });
   }
+
+  // ===== NOTIFICATIONS =====
+  const btnNotifications = document.getElementById("btnNotifications");
+  const notificationsDropdown = document.getElementById("notificationsDropdown");
+  const notifBadge = document.getElementById("notifBadge");
+  const markAllRead = document.getElementById("markAllRead");
+
+  if (btnNotifications && notificationsDropdown) {
+    btnNotifications.addEventListener("click", (e) => {
+      e.stopPropagation();
+      notificationsDropdown.classList.toggle("open");
+      // Close user dropdown if open
+      if (headerUserMenu) headerUserMenu.classList.remove("open");
+    });
+
+    notificationsDropdown.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  if (markAllRead) {
+    markAllRead.addEventListener("click", () => {
+      document.querySelectorAll(".notif-item.unread").forEach((item) => {
+        item.classList.remove("unread");
+        const dot = item.querySelector(".notif-dot");
+        if (dot) dot.remove();
+      });
+      if (notifBadge) notifBadge.classList.add("hidden");
+      showToast("Todas as notificações marcadas como lidas ✓", "info");
+    });
+  }
+
+  // Close dropdowns on outside click
+  document.addEventListener("click", () => {
+    if (headerUserMenu) headerUserMenu.classList.remove("open");
+    if (notificationsDropdown) notificationsDropdown.classList.remove("open");
+  });
 
   // ===== LOGOUT =====
   if (btnLogout) {
@@ -186,6 +244,35 @@ document.addEventListener("DOMContentLoaded", () => {
   if (profileModalOverlay) {
     profileModalOverlay.addEventListener("click", (e) => {
       if (e.target === profileModalOverlay) closeModal(profileModalOverlay);
+    });
+  }
+
+  // ===== SETTINGS MODAL =====
+  if (btnSettings) {
+    btnSettings.addEventListener("click", (e) => {
+      e.preventDefault();
+      headerUserMenu.classList.remove("open");
+      openModal(settingsModalOverlay);
+    });
+  }
+
+  if (closeSettingsModalBtn) {
+    closeSettingsModalBtn.addEventListener("click", () =>
+      closeModal(settingsModalOverlay)
+    );
+  }
+
+  if (settingsModalOverlay) {
+    settingsModalOverlay.addEventListener("click", (e) => {
+      if (e.target === settingsModalOverlay) closeModal(settingsModalOverlay);
+    });
+  }
+
+  if (formSettings) {
+    formSettings.addEventListener("submit", (e) => {
+      e.preventDefault();
+      closeModal(settingsModalOverlay);
+      showToast("Configurações salvas com sucesso! ⚙️", "success");
     });
   }
 
@@ -269,6 +356,9 @@ document.addEventListener("DOMContentLoaded", () => {
         previewImagem.src.startsWith("data:image")
       ) {
         imagemParaSalvar = previewImagem.src;
+      } else {
+        // Always use a food image even if user doesn't upload one
+        imagemParaSalvar = getRandomFoodImage();
       }
 
       const novaReceita = {
@@ -318,10 +408,11 @@ document.addEventListener("DOMContentLoaded", () => {
       ? `<span class="tempo-preparo"><i class="fas fa-clock"></i> ${receita.tempoPreparo}</span>`
       : "";
 
-    const hasImage = receita.imagemUrl && receita.imagemUrl.length > 0;
-    const imageHtml = hasImage
-      ? `<div class="card-image"><img src="${receita.imagemUrl}" alt="${receita.titulo}" loading="lazy" /></div>`
-      : "";
+    // Always show a food image - use recipe image or random default
+    const imageSrc = (receita.imagemUrl && receita.imagemUrl.length > 0)
+      ? receita.imagemUrl
+      : getRandomFoodImage();
+    const imageHtml = `<div class="card-image"><img src="${imageSrc}" alt="${receita.titulo}" loading="lazy" /></div>`;
 
     cardReceita.innerHTML = `
       <div class="card-user-info">
@@ -760,11 +851,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ===== KEYBOARD SHORTCUT: ESC to close modals =====
+  // ===== KEYBOARD SHORTCUT: ESC to close modals & dropdowns =====
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeModal(recipeModalOverlay);
       closeModal(profileModalOverlay);
+      closeModal(settingsModalOverlay);
+      if (notificationsDropdown) notificationsDropdown.classList.remove("open");
+      if (headerUserMenu) headerUserMenu.classList.remove("open");
     }
   });
 
