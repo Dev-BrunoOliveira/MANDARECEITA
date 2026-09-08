@@ -69,6 +69,17 @@ function App() {
           }
         />
 
+        <Route
+          path="/perfil/:username"
+          element={
+            <PrivateRoute>
+              <RequireProfile>
+                <Profile />
+              </RequireProfile>
+            </PrivateRoute>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>

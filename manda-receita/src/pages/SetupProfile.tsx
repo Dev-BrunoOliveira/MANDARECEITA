@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent, useEffect } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import "./SetupProfile.css";
@@ -17,11 +17,7 @@ const SetupProfile = () => {
   const [status, setStatus] = useState("");
   const [especialidade, setEspecialidade] = useState("Amador");
 
-  useEffect(() => {
-    if (user?.isProfileCompleted) {
-      navigate("/principal");
-    }
-  }, [user, navigate]);
+
 
   const handleFotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

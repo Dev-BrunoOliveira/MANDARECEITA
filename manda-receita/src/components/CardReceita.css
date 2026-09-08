@@ -1,75 +1,156 @@
 .card-receita {
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  margin-bottom: 20px;
-  border: 1px solid #eee;
+  margin-bottom: 24px;
+  border: 1px solid #eaeaea;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-receita:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .card-user-info {
   display: flex;
   align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f2f2f2;
+  gap: 12px;
 }
 
-.card-user-info img {
+.card-user-avatar {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  margin-right: 10px;
+  object-fit: cover;
+  border: 2px solid #a66321;
+}
+
+.card-user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .username {
-  font-weight: bold;
+  font-weight: 700;
   color: #3f220b;
+  font-size: 0.95rem;
+}
+
+.recipe-tag-category {
+  font-size: 0.75rem;
+  color: #a66321;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-image-container {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .recipe-image {
   width: 100%;
-  height: 250px;
-  object-fit: cover; /* Garante que a imagem não distorça */
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card-image-container:hover .recipe-image {
+  transform: scale(1.04);
+}
+
+.badge-time {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
 }
 
 .card-content {
-  padding: 15px;
+  padding: 18px;
 }
 
-.card-content h3 {
-  font-size: 1.25em;
-  color: #333;
-  margin: 0 0 5px 0;
+.card-title-clickable {
+  font-size: 1.3rem;
+  color: #3f220b;
+  margin: 0 0 8px 0;
+  cursor: pointer;
+  font-weight: 800;
+  transition: color 0.2s ease;
 }
 
-.categoria {
-  font-size: 0.85em;
-  color: #777;
-  margin-bottom: 15px;
+.card-title-clickable:hover {
+  color: #a66321;
+}
+
+.card-quick-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  color: #666666;
 }
 
 .toggle-recipe-link {
-  color: #0073b1;
+  color: #a66321;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: inline-block;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.toggle-recipe-link:hover {
+  color: #3f220b;
+  transform: translateX(3px);
 }
 
 .card-actions {
   display: flex;
-  gap: 15px;
-  padding: 15px;
-  border-top: 1px solid #f0f0f0;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-top: 1px solid #f2f2f2;
+  background-color: #fafafa;
 }
 
 .btn-action {
   background: none;
-  border: none;
-  color: #555;
+  border: 1px solid transparent;
+  color: #555555;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
 }
 
 .btn-action:hover {
+  background-color: #f0f0f0;
   color: #3f220b;
+}
+
+.btn-like.liked {
+  color: #e63946;
+  background-color: #ffeef0;
+  border-color: #ffccd5;
 }

@@ -9,7 +9,8 @@ const Header = () => {
   console.log("Estado do usuário no Header:", user);
 
   const profileLink = useMemo(() => {
-    return user?.isProfileCompleted ? `/perfil/${user.id}` : "/setup-profile";
+    const uname = user?.username || (user?.name ? user.name.toLowerCase().replace(/\s+/g, "_") : "usuario");
+    return user?.isProfileCompleted ? `/user/${uname}` : "/setup-profile";
   }, [user]);
 
   return (

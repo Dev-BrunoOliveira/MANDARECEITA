@@ -13,12 +13,32 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const existingUserStr = localStorage.getItem("@MandaReceita:user");
+    let isCompleted = false;
+    let username = "bruno";
+    let avatar = "https://i.pravatar.cc/150?img=3";
+    let name = "Bruno Oliveira";
+
+    if (existingUserStr) {
+      try {
+        const existingUser = JSON.parse(existingUserStr);
+        if (existingUser.isProfileCompleted) {
+          isCompleted = true;
+          username = existingUser.username || username;
+          avatar = existingUser.avatar || avatar;
+          name = existingUser.name || name;
+        }
+      } catch (err) {
+        console.error("Erro ao carregar usuário existente:", err);
+      }
+    }
+
     const loggedUser = {
       id: "1",
-      name: "Bruno Oliveira",
-      username: "bruno",
-      avatar: "https://i.pravatar.cc/150?img=3",
-      isProfileCompleted: false,
+      name,
+      username,
+      avatar,
+      isProfileCompleted: isCompleted,
     };
 
     setUser(loggedUser);
