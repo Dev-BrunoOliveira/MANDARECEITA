@@ -1,280 +1,244 @@
-import { useState, useEffect } from "react";
-import type { ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom";
-import "./Home.css";
+import React, { useState, useEffect } from "react";
+import Header from "../components/Header";
+import SidebarLeft from "../components/SidebarLeft";
+import SidebarRight from "../components/SidebarRight";
 import CardReceita from "../components/CardReceita";
-import ModalReceitaDetalhes from "../components/ModalReceitaDetalhes";
-import { useAuth } from "../context/AuthContext";
-import type { Receita } from "../types/recipe";
+import RecipeModal from "../components/RecipeModal";
+import RecipeDetailModal from "../components/RecipeDetailModal";
+import ProfileModal from "../components/ProfileModal";
+import SettingsModal from "../components/SettingsModal";
+
+import { useAuth } from "../hooks/useAuth";
+import { useToast } from "../hooks/useToast";
+import type { Receita, RecipeComment } from "../types/recipe";
 import {
   getReceitasSalvas,
   salvarReceitaStorage,
+  deletarReceitaStorage,
   toggleCurtidaStorage,
+  toggleBookmarkStorage,
+  adicionarComentarioStorage,
 } from "../utils/recipeStorage";
 
-const Home = () => {
+const Home: React.FC = () => {
   const { user } = useAuth();
-  const [isPostagemAberta, setIsPostagemAberta] = useState(false);
-  const [isMenuAberto, setIsMenuAberto] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const { showToast } = useToast();
 
-  // Estados do Formulário de Criação
-  const [novoTitulo, setNovoTitulo] = useState("");
-  const [novaCategoria, setNovaCategoria] = useState("Salgados");
-  const [novosIngredientes, setNovosIngredientes] = useState("");
-  const [novoPreparo, setNovoPreparo] = useState("");
-  const [novoTempoPreparo, setNovoTempoPreparo] = useState("");
-  const [novasPorcoes, setNovasPorcoes] = useState("");
+  const [receitas, setReceitas] = useState<Receita[]>(() => getReceitasSalvas());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeCategory, setActiveCategory] = useState("all");
 
-  // Estado das Receitas e Modal de Detalhes
-  const [receitas, setReceitas] = useState<Receita[]>([]);
-  const [receitaSelecionada, setReceitaSelecionada] = useState<Receita | null>(null);
+  // Modals state
+  const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [selectedRecipeDetail, setSelectedRecipeDetail] = useState<Receita | null>(null);
 
+  // Keyboard shortcut for ESC
   useEffect(() => {
-    const salvas = getReceitasSalvas();
-    setReceitas(salvas);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsRecipeModalOpen(false);
+        setIsProfileModalOpen(false);
+        setIsSettingsModalOpen(false);
+        setSelectedRecipeDetail(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!novoTitulo.trim() || !novosIngredientes.trim() || !novoPreparo.trim()) {
-      alert("Por favor, preencha o título, os ingredientes e o modo de preparo!");
-      return;
-    }
-
-    const novaRec: Receita = {
-      id: Date.now(),
-      chef: user?.name || "Chef Convidado",
-      chefAvatar: user?.avatar || "https://i.pravatar.cc/45",
-      titulo: novoTitulo.trim(),
-      categoria: novaCategoria,
-      imagem: preview || "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
-      ingredientes: novosIngredientes.trim(),
-      preparo: novoPreparo.trim(),
-      tempoPreparo: novoTempoPreparo.trim() || "30 min",
-      porcoes: novasPorcoes.trim() || "4 porções",
-      curtidas: 0,
-      curtidoPeloUsuario: false,
-      dataCriacao: "Agora mesmo",
-    };
-
-    const atualizadas = salvarReceitaStorage(novaRec);
+  const handleRecipeCreated = (nova: Receita) => {
+    const atualizadas = salvarReceitaStorage(nova);
     setReceitas(atualizadas);
-
-    setIsPostagemAberta(false);
-    setPreview(null);
-    setNovoTitulo("");
-    setNovosIngredientes("");
-    setNovoPreparo("");
-    setNovoTempoPreparo("");
-    setNovasPorcoes("");
   };
 
-  const handleToggleLike = (id: number) => {
+  const handleLike = (id: number) => {
     const atualizadas = toggleCurtidaStorage(id);
     setReceitas(atualizadas);
 
-    // Se o modal estiver aberto com essa receita, atualiza o modal também
-    if (receitaSelecionada && receitaSelecionada.id === id) {
-      const encontrada = atualizadas.find((r) => r.id === id);
-      if (encontrada) setReceitaSelecionada(encontrada);
+    if (selectedRecipeDetail && selectedRecipeDetail.id === id) {
+      const rec = atualizadas.find((r) => r.id === id);
+      if (rec) setSelectedRecipeDetail(rec);
     }
   };
 
+  const handleBookmark = (id: number) => {
+    const rec = receitas.find((r) => r.id === id);
+    const wasSaved = rec?.bookmarkedByMe;
+    const atualizadas = toggleBookmarkStorage(id);
+    setReceitas(atualizadas);
+
+    if (!wasSaved) {
+      showToast("Receita salva nos seus favoritos!", "success");
+    } else {
+      showToast("Receita removida dos salvos", "info");
+    }
+  };
+
+  const handleDelete = (id: number) => {
+    const atualizadas = deletarReceitaStorage(id);
+    setReceitas(atualizadas);
+  };
+
+  const handleAddComment = (id: number, comentario: RecipeComment) => {
+    const atualizadas = adicionarComentarioStorage(id, comentario);
+    setReceitas(atualizadas);
+
+    if (selectedRecipeDetail && selectedRecipeDetail.id === id) {
+      const rec = atualizadas.find((r) => r.id === id);
+      if (rec) setSelectedRecipeDetail(rec);
+    }
+  };
+
+  // Filter & Search Logic
+  let receitasFiltradas = [...receitas];
+
+  if (activeFilter === "em-alta") {
+    receitasFiltradas.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+  } else if (activeFilter === "salvos") {
+    receitasFiltradas = receitasFiltradas.filter((r) => r.bookmarkedByMe);
+  } else if (activeFilter === "recentes") {
+    receitasFiltradas.sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  }
+
+  if (activeCategory !== "all") {
+    receitasFiltradas = receitasFiltradas.filter(
+      (r) => r.categoria.toLowerCase() === activeCategory.toLowerCase()
+    );
+  }
+
+  if (searchQuery.trim().length > 0) {
+    const q = searchQuery.toLowerCase().trim();
+    receitasFiltradas = receitasFiltradas.filter(
+      (r) =>
+        r.titulo.toLowerCase().includes(q) ||
+        r.nomeChef.toLowerCase().includes(q) ||
+        r.categoria.toLowerCase().includes(q)
+    );
+  }
+
   return (
-    <div className="home-container">
-      <header className="main-header">
-        <div className="header-content">
-          <h1>Manda Receita</h1>
+    <div className="home-page-wrapper">
+      <Header
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onOpenEditProfile={() => setIsProfileModalOpen(true)}
+        onOpenSettings={() => setIsSettingsModalOpen(true)}
+      />
 
-          <button className="menu-hamburger" onClick={() => setIsMenuAberto(!isMenuAberto)}>
-            <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
-            <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
-            <span className={`bar ${isMenuAberto ? "open" : ""}`}></span>
-          </button>
+      <main>
+        <SidebarLeft
+          receitas={receitas}
+          activeFilter={activeFilter}
+          onSelectFilter={setActiveFilter}
+          activeCategory={activeCategory}
+          onSelectCategory={setActiveCategory}
+        />
 
-          <nav className={`header-nav ${isMenuAberto ? "active" : ""}`}>
-            <div className="nav-links">
-              <Link to="/principal">Página Inicial</Link>
-              <a href="#receitas">Explorar Receitas</a>
-              <a href="#alta">Mais Curtidas</a>
-            </div>
-
-            <Link
-              to={user?.isProfileCompleted && user?.username ? `/user/${user.username}` : "/setup-profile"}
-              className="nav-user"
-            >
-              <span>{user?.name || "Meu Perfil"}</span>
-              <img
-                src={user?.avatar || "https://i.pravatar.cc/40"}
-                alt="Avatar"
-                className="nav-avatar"
-              />
-            </Link>
-          </nav>
-        </div>
-      </header>
-
-      <main className="main-layout">
         <div className="main-feed">
-          <section className="formulario-receita">
-            {!isPostagemAberta ? (
-              <div className="share-box" onClick={() => setIsPostagemAberta(true)}>
-                <img
-                  src={user?.avatar || "https://i.pravatar.cc/40"}
-                  alt="Sua foto"
-                  className="user-avatar"
-                />
-                <div className="fake-input">
-                  O que vamos cozinhar hoje, {user?.name?.split(" ")[0] || "Chef"}? 🍳
-                </div>
+          {/* Create Post Box */}
+          <div className="create-post-box">
+            <div className="create-post-header">
+              <img
+                src={user?.profilePhoto || "https://i.pravatar.cc/40?u=me"}
+                alt="Sua foto"
+                className="create-post-avatar"
+              />
+              <button
+                className="create-post-trigger"
+                onClick={() => setIsRecipeModalOpen(true)}
+              >
+                <span>Compartilhe uma receita...</span>
+              </button>
+            </div>
+            <div className="create-post-actions">
+              <button
+                className="create-action-btn"
+                onClick={() => setIsRecipeModalOpen(true)}
+              >
+                <i className="fas fa-image" style={{ color: "#2ecc71" }}></i>
+                <span>Foto</span>
+              </button>
+              <button
+                className="create-action-btn"
+                onClick={() => setIsRecipeModalOpen(true)}
+              >
+                <i className="fas fa-utensils" style={{ color: "#e67e22" }}></i>
+                <span>Receita</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Feed Container */}
+          <section className="feed-receitas">
+            {receitasFiltradas.length === 0 ? (
+              <div className="feed-empty">
+                <i className="fas fa-seedling"></i>
+                <h3>Nenhuma receita encontrada</h3>
+                <p>Tente alterar o filtro ou seja o primeiro a compartilhar uma receita!</p>
               </div>
             ) : (
-              <div className="modal-postagem">
-                <div className="modal-header">
-                  <h3>✨ Compartilhe sua Receita</h3>
-                  <button type="button" className="btn-close" onClick={() => setIsPostagemAberta(false)}>
-                    ×
-                  </button>
-                </div>
-
-                <form onSubmit={handleSubmit}>
-                  <div className="form-group">
-                    <label>Título da Receita *</label>
-                    <input
-                      type="text"
-                      value={novoTitulo}
-                      onChange={(e) => setNovoTitulo(e.target.value)}
-                      placeholder="Ex: Strogonoff de Frango Cremoso"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label>Categoria</label>
-                      <select value={novaCategoria} onChange={(e) => setNovaCategoria(e.target.value)}>
-                        <option value="Salgados">Salgados</option>
-                        <option value="Doces">Doces</option>
-                        <option value="Sobremesas">Sobremesas</option>
-                        <option value="Bebidas">Bebidas</option>
-                        <option value="Fit / Leve">Fit / Leve</option>
-                      </select>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Tempo Estimado</label>
-                      <input
-                        type="text"
-                        value={novoTempoPreparo}
-                        onChange={(e) => setNovoTempoPreparo(e.target.value)}
-                        placeholder="Ex: 40 min"
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label>Rendimento</label>
-                      <input
-                        type="text"
-                        value={novasPorcoes}
-                        onChange={(e) => setNovasPorcoes(e.target.value)}
-                        placeholder="Ex: 4 porções"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label>Ingredientes * (um por linha)</label>
-                    <textarea
-                      rows={4}
-                      value={novosIngredientes}
-                      onChange={(e) => setNovosIngredientes(e.target.value)}
-                      placeholder="500g de peito de frango em cubos&#10;1 lata de creme de leite&#10;2 colheres de ketchup"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Modo de Preparo * (passo a passo)</label>
-                    <textarea
-                      rows={5}
-                      value={novoPreparo}
-                      onChange={(e) => setNovoPreparo(e.target.value)}
-                      placeholder="1. Em uma panela, doure a cebola e o alho.&#10;2. Adicione o frango e frite até dourar.&#10;3. Misture o creme de leite e sirva."
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="fotoReceita" className="btn-add-foto">
-                      📸 Selecionar Foto do Prato
-                    </label>
-                    <input type="file" id="fotoReceita" accept="image/*" onChange={handleImageChange} hidden />
-                    {preview && (
-                      <div className="image-preview-container">
-                        <img src={preview} alt="Preview" className="img-preview-feed" />
-                        <button type="button" onClick={() => setPreview(null)} className="btn-remove">
-                          Remover foto
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <button type="submit" className="btn-enviar">
-                    Publicar Receita no Feed 🚀
-                  </button>
-                </form>
+              <div className="container-receitas">
+                {receitasFiltradas.map((rec) => (
+                  <CardReceita
+                    key={rec.id}
+                    receita={rec}
+                    onViewDetails={(r) => setSelectedRecipeDetail(r)}
+                    onLike={handleLike}
+                    onBookmark={handleBookmark}
+                    onDelete={handleDelete}
+                    onAddComment={handleAddComment}
+                  />
+                ))}
               </div>
             )}
           </section>
-
-          <section className="feed-receitas" id="receitas">
-            <h2>Receitas da Comunidade ({receitas.length})</h2>
-            <div className="container-receitas">
-              {receitas.map((rec) => (
-                <CardReceita
-                  key={rec.id}
-                  receita={rec}
-                  onViewDetails={(r) => setReceitaSelecionada(r)}
-                  onLike={handleToggleLike}
-                />
-              ))}
-            </div>
-          </section>
         </div>
 
-        <aside className="sidebar sidebar-right">
-          <h3>🔥 Destaques da Semana</h3>
-          <ul>
-            {receitas.slice(0, 3).map((r) => (
-              <li key={r.id}>
-                <a href="#receitas" onClick={() => setReceitaSelecionada(r)}>
-                  {r.titulo}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </aside>
+        <SidebarRight
+          receitas={receitas}
+          onSelectRecipe={(r) => setSelectedRecipeDetail(r)}
+        />
       </main>
 
-      {/* Modal de Detalhes da Receita */}
-      {receitaSelecionada && (
-        <ModalReceitaDetalhes
-          receita={receitaSelecionada}
-          onClose={() => setReceitaSelecionada(null)}
-          onLike={handleToggleLike}
-        />
-      )}
+      <footer>
+        <div className="footer-content">
+          <div className="footer-logo">Manda Receita</div>
+          <p>&copy; 2026 Manda Receita. Todos os direitos reservados.</p>
+          <div className="footer-links">
+            <a href="#">Sobre</a>
+            <a href="#">Privacidade</a>
+            <a href="#">Termos</a>
+            <a href="#">Contato</a>
+          </div>
+        </div>
+      </footer>
+
+      {/* Modals */}
+      <RecipeModal
+        isOpen={isRecipeModalOpen}
+        onClose={() => setIsRecipeModalOpen(false)}
+        onRecipeCreated={handleRecipeCreated}
+      />
+
+      <RecipeDetailModal
+        receita={selectedRecipeDetail}
+        onClose={() => setSelectedRecipeDetail(null)}
+      />
+
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+      />
+
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+      />
     </div>
   );
 };

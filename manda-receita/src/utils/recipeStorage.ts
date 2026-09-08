@@ -1,98 +1,179 @@
-import type { Receita } from "../types/recipe";
+import type { Receita, RecipeComment } from "../types/recipe";
 
-const STORAGE_KEY = "@MandaReceita:receitas";
-
-export const RECEITAS_INICIAIS: Receita[] = [
+export const DEFAULT_RECIPES: Receita[] = [
   {
-    id: 1,
-    chef: "Chef Erick Jacquin",
-    chefAvatar: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=120",
-    titulo: "Pudim de Leite Condensado Tradicional",
-    categoria: "Doces",
-    imagem: "https://images.pexels.com/photos/2105104/pexels-photo-2105104.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    ingredientes: "1 lata de leite condensado\n1 lata de leite (mesmo tamanho da lata de leite condensado)\n3 ovos inteiros\n1 xícara de açúcar para o caramelo\n1/2 xícara de água para o caramelo",
-    preparo: "1. Em uma panela, derreta o açúcar até ficar dourado e adicione a água cuidadosamente. Deixe ferver até dissolver os grumos.\n2. Caramelize uma forma de pudim com furo central e reserve.\n3. No liquidificador, bata o leite condensado, o leite e os ovos por 3 minutos até ficar homogêneo.\n4. Despeje a mistura na forma caramelizada.\n5. Cubra com papel alumínio e asse em banho-maria em forno preaquecido a 180°C por cerca de 1 hora e 30 minutos.\n6. Deixe esfriar completamente e leve à geladeira por 4 horas antes de desenformar.",
-    tempoPreparo: "90 min",
-    porcoes: "8 porções",
-    curtidas: 24,
-    curtidoPeloUsuario: false,
-    dataCriacao: "Hoje",
+    id: 1001,
+    nomeChef: "Chef Jacquin",
+    avatarUrl: "https://i.pravatar.cc/42?u=jacquin",
+    titulo: "Pudim de Leite Perfeito",
+    categoria: "doces",
+    ingredientes:
+      "- 1 lata de leite condensado\n- 1 lata de leite (use a lata como medida)\n- 3 ovos inteiros\n- 1 xícara de açúcar para a calda",
+    modoPreparo:
+      "1. Faça a calda: coloque o açúcar em uma forma e leve ao fogo até caramelizar.\n2. Bata no liquidificador o leite condensado, o leite e os ovos.\n3. Despeje a mistura na forma caramelizada.\n4. Asse em banho-maria no forno a 180°C por 1 hora.\n5. Desenforme gelado.",
+    tempoPreparo: "1h 30min",
+    imagemUrl:
+      "https://images.pexels.com/photos/2105104/pexels-photo-2105104.jpeg?auto=compress&cs=tinysrgb&w=800",
+    likes: 195,
+    likedByMe: false,
+    bookmarkedByMe: false,
+    comentarios: [
+      {
+        id: 1,
+        author: "Ana Cozinha",
+        avatar: "https://i.pravatar.cc/32?u=chef1",
+        text: "Receita maravilhosa! Fiz ontem e ficou perfeito!",
+        timestamp: new Date(Date.now() - 7200000).toISOString(),
+      },
+      {
+        id: 2,
+        author: "Carlos Gourmet",
+        avatar: "https://i.pravatar.cc/32?u=chef2",
+        text: "Dica: adicione uma pitada de canela na calda. Fica divino!",
+        timestamp: new Date(Date.now() - 3600000).toISOString(),
+      },
+    ],
+    timestamp: new Date(Date.now() - 86400000).toISOString(),
   },
   {
-    id: 2,
-    chef: "Dona Maria",
-    chefAvatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=120",
-    titulo: "Bolo de Cenoura com Cobertura de Chocolate",
-    categoria: "Doces",
-    imagem: "https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    ingredientes: "3 cenouras médias picadas\n3 ovos\n1 xícara de óleo de milho ou girassol\n2 xícaras de açúcar\n2 xícaras de farinha de trigo\n1 colher (sopa) de fermento em pó\n1 xícara de chocolate em pó (cobertura)\n1 colher (sopa) de manteiga (cobertura)\n1/2 xícara de leite (cobertura)\n1 xícara de açúcar (cobertura)",
-    preparo: "1. No liquidificador, bata as cenouras, os ovos e o óleo até obter um creme bem liso.\n2. Em uma tigela, misture o açúcar e a farinha de trigo peneirados.\n3. Adicione a mistura do liquidificador à tigela e mexa bem com um fouet até incorporar.\n4. Acrescente o fermento e misture delicadamente.\n5. Despeje em forma untada e enfarinhada e asse a 180°C por aproximadamente 40 minutos.\n6. Para a cobertura: leve o chocolate em pó, a manteiga, o leite e o açúcar ao fogo médio até ferver e engrossar levemente. Despeje sobre o bolo ainda quente.",
+    id: 1002,
+    nomeChef: "Ana Cozinha",
+    avatarUrl: "https://i.pravatar.cc/42?u=chef1",
+    titulo: "Bolo de Chocolate Fofinho",
+    categoria: "doces",
+    ingredientes:
+      "- 3 ovos\n- 2 xícaras de farinha de trigo\n- 1 xícara de chocolate em pó\n- 2 xícaras de açúcar\n- 1 xícara de leite\n- 1/2 xícara de óleo\n- 1 colher de fermento",
+    modoPreparo:
+      "1. Bata os ovos com o açúcar até ficar cremoso.\n2. Adicione o óleo e o leite, misture bem.\n3. Acrescente a farinha e o chocolate peneirados.\n4. Por último, adicione o fermento e misture delicadamente.\n5. Asse em forno preaquecido a 180°C por 40 minutos.",
     tempoPreparo: "50 min",
-    porcoes: "12 porções",
-    curtidas: 42,
-    curtidoPeloUsuario: true,
-    dataCriacao: "Ontem",
+    imagemUrl:
+      "https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=800",
+    likes: 324,
+    likedByMe: false,
+    bookmarkedByMe: true,
+    comentarios: [
+      {
+        id: 3,
+        author: "Maria Doces",
+        avatar: "https://i.pravatar.cc/32?u=chef3",
+        text: "Esse bolo é o melhor que já fiz! A família amou",
+        timestamp: new Date(Date.now() - 14400000).toISOString(),
+      },
+    ],
+    timestamp: new Date(Date.now() - 43200000).toISOString(),
   },
   {
-    id: 3,
-    chef: "Mestre do Churrasco",
-    chefAvatar: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=120",
-    titulo: "Picanha Suculenta na Grelha",
-    categoria: "Salgados",
-    imagem: "https://images.pexels.com/photos/1251208/pexels-photo-1251208.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    ingredientes: "1 peça de picanha bovina de alta qualidade (aprox. 1.2kg)\nSal grosso a gosto\nPimenta-do-reino moída na hora",
-    preparo: "1. Retire a picanha da geladeira 30 minutos antes de assar para que fique em temperatura ambiente.\n2. Faça cortes leves em diagonal na camada de gordura, sem atingir a carne.\n3. Tempere a peça uniformemente com sal grosso.\n4. Leve à grelha com o braseiro bem quente, primeiro com a gordura virada para cima por 10 a 15 minutos.\n5. Vire a gordura para baixo até selar e dourar, tomando cuidado com labaredas.\n6. Retire, deixe a carne descansar por 5 minutos antes de fatiar contra a fibra e servir.",
+    id: 1003,
+    nomeChef: "Carlos Gourmet",
+    avatarUrl: "https://i.pravatar.cc/42?u=chef2",
+    titulo: "Strogonoff de Frango Cremoso",
+    categoria: "prato-principal",
+    ingredientes:
+      "- 500g de peito de frango em cubos\n- 1 lata de creme de leite\n- 2 colheres de catchup\n- 1 colher de mostarda\n- 200g de champignon\n- 1 cebola picada\n- Sal e pimenta a gosto",
+    modoPreparo:
+      "1. Refogue a cebola em óleo até dourar.\n2. Adicione o frango e tempere com sal e pimenta.\n3. Quando o frango estiver cozido, adicione o catchup e a mostarda.\n4. Acrescente o champignon e misture.\n5. Desligue o fogo e adicione o creme de leite.\n6. Sirva com arroz e batata palha.",
     tempoPreparo: "35 min",
-    porcoes: "6 porções",
-    curtidas: 58,
-    curtidoPeloUsuario: false,
-    dataCriacao: "Há 3 dias",
-  }
+    imagemUrl:
+      "https://images.pexels.com/photos/6419701/pexels-photo-6419701.jpeg?auto=compress&cs=tinysrgb&w=800",
+    likes: 167,
+    likedByMe: false,
+    bookmarkedByMe: false,
+    comentarios: [],
+    timestamp: new Date(Date.now() - 172800000).toISOString(),
+  },
 ];
 
-export const getReceitasSalvas = (): Receita[] => {
+export function getReceitasSalvas(): Receita[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(RECEITAS_INICIAIS));
-      return RECEITAS_INICIAIS;
+    const data = localStorage.getItem("receitas");
+    if (!data) {
+      localStorage.setItem("receitas", JSON.stringify(DEFAULT_RECIPES));
+      return DEFAULT_RECIPES;
     }
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : RECEITAS_INICIAIS;
-  } catch (err) {
-    console.error("Erro ao ler receitas do localStorage:", err);
-    return RECEITAS_INICIAIS;
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_RECIPES;
+  } catch {
+    return DEFAULT_RECIPES;
   }
-};
+}
 
-export const salvarReceitaStorage = (novaReceita: Receita): Receita[] => {
-  const atuais = getReceitasSalvas();
-  const atualizadas = [novaReceita, ...atuais];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(atualizadas));
+export function salvarReceitaStorage(novaReceita: Receita): Receita[] {
+  const receitas = getReceitasSalvas();
+  const atualizadas = [novaReceita, ...receitas];
+  localStorage.setItem("receitas", JSON.stringify(atualizadas));
   return atualizadas;
-};
+}
 
-export const toggleCurtidaStorage = (id: number): Receita[] => {
-  const atuais = getReceitasSalvas();
-  const atualizadas = atuais.map((rec) => {
-    if (rec.id === id) {
-      const estaCurtido = rec.curtidoPeloUsuario ?? false;
-      const curtidasAtuais = rec.curtidas ?? 0;
-      return {
-        ...rec,
-        curtidoPeloUsuario: !estaCurtido,
-        curtidas: estaCurtido ? Math.max(0, curtidasAtuais - 1) : curtidasAtuais + 1,
-      };
+export function deletarReceitaStorage(id: number): Receita[] {
+  const receitas = getReceitasSalvas();
+  const atualizadas = receitas.filter((r) => r.id !== id);
+  localStorage.setItem("receitas", JSON.stringify(atualizadas));
+  return atualizadas;
+}
+
+export function toggleCurtidaStorage(id: number): Receita[] {
+  const receitas = getReceitasSalvas();
+  const idx = receitas.findIndex((r) => r.id === id);
+  if (idx !== -1) {
+    if (receitas[idx].likedByMe) {
+      receitas[idx].likes = Math.max(0, (receitas[idx].likes || 1) - 1);
+      receitas[idx].likedByMe = false;
+    } else {
+      receitas[idx].likes = (receitas[idx].likes || 0) + 1;
+      receitas[idx].likedByMe = true;
     }
-    return rec;
-  });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(atualizadas));
-  return atualizadas;
-};
+    localStorage.setItem("receitas", JSON.stringify(receitas));
+  }
+  return [...receitas];
+}
 
-export const deletarReceitaStorage = (id: number): Receita[] => {
-  const atuais = getReceitasSalvas();
-  const atualizadas = atuais.filter((rec) => rec.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(atualizadas));
-  return atualizadas;
-};
+export function toggleBookmarkStorage(id: number): Receita[] {
+  const receitas = getReceitasSalvas();
+  const idx = receitas.findIndex((r) => r.id === id);
+  if (idx !== -1) {
+    receitas[idx].bookmarkedByMe = !receitas[idx].bookmarkedByMe;
+    localStorage.setItem("receitas", JSON.stringify(receitas));
+  }
+  return [...receitas];
+}
+
+export function adicionarComentarioStorage(id: number, comentario: RecipeComment): Receita[] {
+  const receitas = getReceitasSalvas();
+  const idx = receitas.findIndex((r) => r.id === id);
+  if (idx !== -1) {
+    if (!receitas[idx].comentarios) receitas[idx].comentarios = [];
+    receitas[idx].comentarios.push(comentario);
+    localStorage.setItem("receitas", JSON.stringify(receitas));
+  }
+  return [...receitas];
+}
+
+export function formatarCategoria(categoriaValue: string): string {
+  if (!categoriaValue) return "";
+  const map: Record<string, string> = {
+    salgados: "Salgados",
+    doces: "Doces",
+    entradas: "Entradas & Petiscos",
+    sobremesas: "Sobremesas",
+    "prato-principal": "Prato Principal",
+    acompanhamentos: "Acompanhamentos",
+    caldos: "Caldos & Sopas",
+  };
+  return map[categoriaValue.toLowerCase()] || categoriaValue;
+}
+
+export function getTimeAgo(timestamp: string): string {
+  if (!timestamp) return "agora";
+  const now = new Date();
+  const then = new Date(timestamp);
+  const diffMs = now.getTime() - then.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHour = Math.floor(diffMs / 3600000);
+  const diffDay = Math.floor(diffMs / 86400000);
+
+  if (diffMin < 1) return "agora";
+  if (diffMin < 60) return `${diffMin} min`;
+  if (diffHour < 24) return `${diffHour}h`;
+  if (diffDay < 7) return `${diffDay}d`;
+  return then.toLocaleDateString("pt-BR");
+}
