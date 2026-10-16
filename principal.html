@@ -26,7 +26,6 @@
     <header id="mainHeader">
       <div class="header-left">
         <a href="principal.html" class="header-logo">
-          <span class="header-logo-icon">🍳</span>
           <span class="header-logo-text">Manda Receita</span>
         </a>
       </div>
@@ -498,12 +497,52 @@
             </button>
           </form>
         </div>
+    <!-- ===== MODAL: LEITURA COMPLETA DA RECEITA ===== -->
+    <div class="modal-overlay" id="recipeDetailModalOverlay">
+      <div class="modal modal-recipe-detail" id="recipeDetailModal">
+        <button class="modal-close" id="closeRecipeDetailModal">
+          <i class="fas fa-xmark"></i>
+        </button>
+        <div class="recipe-detail-banner">
+          <img id="detailImage" src="" alt="Imagem da receita" />
+          <span class="detail-category-badge" id="detailCategory"></span>
+        </div>
+        <div class="recipe-detail-body">
+          <h2 id="detailTitle"></h2>
+          <div class="detail-author-bar">
+            <img id="detailAvatar" src="" alt="Chef" />
+            <div class="detail-author-info">
+              <strong id="detailChefName"></strong>
+              <span id="detailTimeAgo"></span>
+            </div>
+          </div>
+          <div class="detail-stats-bar">
+            <span id="detailPrepTime"><i class="fas fa-clock"></i> <span id="detailPrepTimeText"></span></span>
+            <span id="detailLikes"><i class="fas fa-heart"></i> <span id="detailLikesText"></span></span>
+          </div>
+
+          <div class="detail-section">
+            <h3><i class="fas fa-list-check"></i> Ingredientes</h3>
+            <p class="detail-hint">Marque os ingredientes à medida que separa na cozinha:</p>
+            <div id="detailIngredientsList" class="checklist-container"></div>
+          </div>
+
+          <div class="detail-section">
+            <h3><i class="fas fa-fire-burner"></i> Modo de Preparo</h3>
+            <div id="detailPreparationSteps" class="steps-container"></div>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn-detail-action" id="btnCopyIngredients"><i class="fas fa-copy"></i> Copiar Ingredientes</button>
+            <button class="btn-detail-action primary" id="btnCloseDetail"><i class="fas fa-check"></i> Fechar</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <footer>
       <div class="footer-content">
-        <div class="footer-logo">🍳 Manda Receita</div>
+        <div class="footer-logo"> Manda Receita</div>
         <p>&copy; 2025 Manda Receita. Todos os direitos reservados.</p>
         <div class="footer-links">
           <a href="#">Sobre</a>

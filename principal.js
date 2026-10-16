@@ -20,6 +20,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }, duration);
   }
 
+  // ===== DARK MODE INITIALIZATION =====
+  const themeToggle = document.getElementById("themeToggle");
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    if (themeToggle) themeToggle.checked = true;
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("change", (e) => {
+      const isDark = e.target.checked;
+      document.body.classList.toggle("dark-mode", isDark);
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+      showToast(isDark ? "Modo Escuro ativado 🌙" : "Modo Claro ativado ☀️", "info");
+    });
+  }
+
   // ===== ELEMENTS =====
   const containerReceitas = document.getElementById("containerReceitas");
   const feedEmpty = document.getElementById("feedEmpty");
@@ -47,6 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnSettings = document.getElementById("btnSettings");
   const formSettings = document.getElementById("formSettings");
 
+  // Recipe Detail modal
+  const recipeDetailModalOverlay = document.getElementById("recipeDetailModalOverlay");
+  const closeRecipeDetailModalBtn = document.getElementById("closeRecipeDetailModal");
+  const btnCloseDetail = document.getElementById("btnCloseDetail");
+  const btnCopyIngredients = document.getElementById("btnCopyIngredients");
+
   // Header
   const headerUserMenu = document.getElementById("headerUserMenu");
   const btnLogout = document.getElementById("btnLogout");
@@ -54,11 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== LOAD USER DATA =====
   function loadUserData() {
     const userData = JSON.parse(localStorage.getItem("userData")) || {
-      name: "Usuário",
-      email: "",
+      name: "Bruno Santos de Oliveira",
+      email: "bruno@email.com",
       bio: "Apaixonado(a) por culinária 🍳",
-      location: "",
-      profilePhoto: "",
+      location: "São Paulo, SP",
+      profilePhoto: "https://i.pravatar.cc/150?u=me",
     };
 
     // Update all user-related elements
@@ -90,9 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update stats
     const receitas = JSON.parse(localStorage.getItem("receitas")) || [];
-    const userReceitas = receitas.filter(
-      (r) => r.nomeChef === userData.name
-    ).length;
+    const userReceitas = receitas.filter((r) => r.nomeChef === userData.name).length;
     const statReceitas = document.getElementById("statReceitas");
     if (statReceitas) statReceitas.textContent = userReceitas;
 
@@ -100,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let totalLikes = 0;
     receitas.forEach((r) => {
       if (r.nomeChef === userData.name) {
-        totalLikes += (r.likes || 0);
+        totalLikes += r.likes || 0;
       }
     });
     const statCurtidas = document.getElementById("statCurtidas");
@@ -119,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const currentUser = loadUserData();
 
-  // ===== DEFAULT FOOD IMAGES (for posts without photos) =====
+  // ===== DEFAULT FOOD IMAGES =====
   const defaultFoodImages = [
     "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
     "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -140,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
     headerUserMenu.addEventListener("click", (e) => {
       e.stopPropagation();
       headerUserMenu.classList.toggle("open");
-      // Close notifications if open
       const notifDropdown = document.getElementById("notificationsDropdown");
       if (notifDropdown) notifDropdown.classList.remove("open");
     });
@@ -156,7 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btnNotifications.addEventListener("click", (e) => {
       e.stopPropagation();
       notificationsDropdown.classList.toggle("open");
-      // Close user dropdown if open
       if (headerUserMenu) headerUserMenu.classList.remove("open");
     });
 
@@ -181,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", () => {
     if (headerUserMenu) headerUserMenu.classList.remove("open");
     if (notificationsDropdown) notificationsDropdown.classList.remove("open");
+    document.querySelectorAll(".card-menu-dropdown.open").forEach((m) => m.classList.remove("open"));
   });
 
   // ===== LOGOUT =====
@@ -195,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== RECIPE MODAL =====
+  // ===== MODAL HELPERS =====
   function openModal(overlay) {
     if (overlay) overlay.classList.add("open");
     document.body.style.overflow = "hidden";
@@ -206,18 +227,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = "";
   }
 
-  [openRecipeModalBtn, openRecipeModalPhoto, openRecipeModalRecipe].forEach(
-    (btn) => {
-      if (btn) {
-        btn.addEventListener("click", () => openModal(recipeModalOverlay));
-      }
+  [openRecipeModalBtn, openRecipeModalPhoto, openRecipeModalRecipe].forEach((btn) => {
+    if (btn) {
+      btn.addEventListener("click", () => openModal(recipeModalOverlay));
     }
-  );
+  });
 
   if (closeRecipeModalBtn) {
-    closeRecipeModalBtn.addEventListener("click", () =>
-      closeModal(recipeModalOverlay)
-    );
+    closeRecipeModalBtn.addEventListener("click", () => closeModal(recipeModalOverlay));
   }
 
   if (recipeModalOverlay) {
@@ -230,15 +247,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnEditProfile) {
     btnEditProfile.addEventListener("click", (e) => {
       e.preventDefault();
-      headerUserMenu.classList.remove("open");
+      if (headerUserMenu) headerUserMenu.classList.remove("open");
       openModal(profileModalOverlay);
     });
   }
 
   if (closeProfileModalBtn) {
-    closeProfileModalBtn.addEventListener("click", () =>
-      closeModal(profileModalOverlay)
-    );
+    closeProfileModalBtn.addEventListener("click", () => closeModal(profileModalOverlay));
   }
 
   if (profileModalOverlay) {
@@ -251,15 +266,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnSettings) {
     btnSettings.addEventListener("click", (e) => {
       e.preventDefault();
-      headerUserMenu.classList.remove("open");
+      if (headerUserMenu) headerUserMenu.classList.remove("open");
       openModal(settingsModalOverlay);
     });
   }
 
   if (closeSettingsModalBtn) {
-    closeSettingsModalBtn.addEventListener("click", () =>
-      closeModal(settingsModalOverlay)
-    );
+    closeSettingsModalBtn.addEventListener("click", () => closeModal(settingsModalOverlay));
   }
 
   if (settingsModalOverlay) {
@@ -273,6 +286,100 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       closeModal(settingsModalOverlay);
       showToast("Configurações salvas com sucesso! ⚙️", "success");
+    });
+  }
+
+  // ===== RECIPE DETAIL MODAL OPEN & CLOSE =====
+  function abrirModalDetalhesReceita(receita) {
+    const detailImage = document.getElementById("detailImage");
+    const detailCategory = document.getElementById("detailCategory");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailAvatar = document.getElementById("detailAvatar");
+    const detailChefName = document.getElementById("detailChefName");
+    const detailTimeAgo = document.getElementById("detailTimeAgo");
+    const detailPrepTimeText = document.getElementById("detailPrepTimeText");
+    const detailLikesText = document.getElementById("detailLikesText");
+    const detailIngredientsList = document.getElementById("detailIngredientsList");
+    const detailPreparationSteps = document.getElementById("detailPreparationSteps");
+
+    if (detailImage) detailImage.src = receita.imagemUrl || getRandomFoodImage();
+    if (detailCategory) detailCategory.textContent = formatarCategoria(receita.categoria) || "Geral";
+    if (detailTitle) detailTitle.textContent = receita.titulo;
+    if (detailAvatar) detailAvatar.src = receita.avatarUrl || "https://i.pravatar.cc/42?u=" + receita.id;
+    if (detailChefName) detailChefName.textContent = receita.nomeChef || "Chef Anônimo";
+    if (detailTimeAgo) detailTimeAgo.textContent = getTimeAgo(receita.timestamp);
+    if (detailPrepTimeText) detailPrepTimeText.textContent = receita.tempoPreparo || "30 min";
+    if (detailLikesText) detailLikesText.textContent = `${receita.likes || 0} curtidas`;
+
+    // Render Checklist de Ingredientes
+    if (detailIngredientsList) {
+      detailIngredientsList.innerHTML = "";
+      const linhasIngredientes = (receita.ingredientes || "")
+        .split("\n")
+        .map((i) => i.replace(/^[-•*]\s*/, "").trim())
+        .filter((i) => i.length > 0);
+
+      if (linhasIngredientes.length === 0) {
+        detailIngredientsList.innerHTML = "<p>Nenhum ingrediente especificado.</p>";
+      } else {
+        linhasIngredientes.forEach((ing, idx) => {
+          const item = document.createElement("label");
+          item.className = "checklist-item";
+          item.innerHTML = `
+            <input type="checkbox" id="ing_${idx}" />
+            <span>${ing}</span>
+          `;
+          item.querySelector("input").addEventListener("change", (e) => {
+            item.classList.toggle("checked", e.target.checked);
+          });
+          detailIngredientsList.appendChild(item);
+        });
+      }
+    }
+
+    // Render Passo a Passo do Modo de Preparo
+    if (detailPreparationSteps) {
+      detailPreparationSteps.innerHTML = "";
+      const passos = (receita.modoPreparo || "")
+        .split("\n")
+        .map((p) => p.replace(/^\d+[\.\)]\s*/, "").trim())
+        .filter((p) => p.length > 0);
+
+      if (passos.length === 0) {
+        detailPreparationSteps.innerHTML = "<p>Nenhum modo de preparo informado.</p>";
+      } else {
+        passos.forEach((passo, idx) => {
+          const stepCard = document.createElement("div");
+          stepCard.className = "step-card";
+          stepCard.innerHTML = `
+            <span class="step-num">${idx + 1}</span>
+            <p class="step-text">${passo}</p>
+          `;
+          detailPreparationSteps.appendChild(stepCard);
+        });
+      }
+    }
+
+    // Configurar botão de copiar ingredientes
+    if (btnCopyIngredients) {
+      btnCopyIngredients.onclick = () => {
+        navigator.clipboard.writeText(receita.ingredientes || "");
+        showToast("Lista de ingredientes copiada! 📋", "success");
+      };
+    }
+
+    openModal(recipeDetailModalOverlay);
+  }
+
+  if (closeRecipeDetailModalBtn) {
+    closeRecipeDetailModalBtn.addEventListener("click", () => closeModal(recipeDetailModalOverlay));
+  }
+  if (btnCloseDetail) {
+    btnCloseDetail.addEventListener("click", () => closeModal(recipeDetailModalOverlay));
+  }
+  if (recipeDetailModalOverlay) {
+    recipeDetailModalOverlay.addEventListener("click", (e) => {
+      if (e.target === recipeDetailModalOverlay) closeModal(recipeDetailModalOverlay);
     });
   }
 
@@ -301,7 +408,6 @@ document.addEventListener("DOMContentLoaded", () => {
       userData.bio = document.getElementById("editBio").value.trim();
       userData.location = document.getElementById("editLocation").value.trim();
 
-      // Profile photo
       const preview = document.getElementById("editProfileAvatarPreview");
       if (preview && preview.src.startsWith("data:image")) {
         userData.profilePhoto = preview.src;
@@ -323,15 +429,13 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.onload = function (e) {
           previewImagem.src = e.target.result;
           previewImagem.style.display = "block";
-          if (fileUploadPlaceholder)
-            fileUploadPlaceholder.style.display = "none";
+          if (fileUploadPlaceholder) fileUploadPlaceholder.style.display = "none";
         };
         reader.readAsDataURL(file);
       } else {
         previewImagem.src = "#";
         previewImagem.style.display = "none";
-        if (fileUploadPlaceholder)
-          fileUploadPlaceholder.style.display = "block";
+        if (fileUploadPlaceholder) fileUploadPlaceholder.style.display = "block";
       }
     });
   }
@@ -349,15 +453,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const tempoPreparo = document.getElementById("tempoPreparo").value.trim();
 
       let imagemParaSalvar = "";
-
-      if (
-        previewImagem &&
-        previewImagem.src &&
-        previewImagem.src.startsWith("data:image")
-      ) {
+      if (previewImagem && previewImagem.src && previewImagem.src.startsWith("data:image")) {
         imagemParaSalvar = previewImagem.src;
       } else {
-        // Always use a food image even if user doesn't upload one
         imagemParaSalvar = getRandomFoodImage();
       }
 
@@ -373,6 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
         imagemUrl: imagemParaSalvar,
         likes: 0,
         likedByMe: false,
+        bookmarkedByMe: false,
         comentarios: [],
         timestamp: new Date().toISOString(),
       };
@@ -386,9 +485,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (fileUploadPlaceholder) fileUploadPlaceholder.style.display = "block";
 
       closeModal(recipeModalOverlay);
-      showToast("Receita publicada! 🎉", "success");
+      showToast("Receita publicada com sucesso! 🎉", "success");
 
-      // Update stats
       loadUserData();
     });
   }
@@ -408,11 +506,10 @@ document.addEventListener("DOMContentLoaded", () => {
       ? `<span class="tempo-preparo"><i class="fas fa-clock"></i> ${receita.tempoPreparo}</span>`
       : "";
 
-    // Always show a food image - use recipe image or random default
-    const imageSrc = (receita.imagemUrl && receita.imagemUrl.length > 0)
-      ? receita.imagemUrl
-      : getRandomFoodImage();
+    const imageSrc = receita.imagemUrl && receita.imagemUrl.length > 0 ? receita.imagemUrl : getRandomFoodImage();
     const imageHtml = `<div class="card-image"><img src="${imageSrc}" alt="${receita.titulo}" loading="lazy" /></div>`;
+
+    const isMyRecipe = currentUser && receita.nomeChef === currentUser.name;
 
     cardReceita.innerHTML = `
       <div class="card-user-info">
@@ -421,7 +518,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="username">${receita.nomeChef || "Chef Anônimo"}</span>
           <span class="post-time">${timeAgo}</span>
         </div>
-        <button class="card-menu-btn"><i class="fas fa-ellipsis"></i></button>
+        <button class="card-menu-btn" title="Opções"><i class="fas fa-ellipsis"></i></button>
+        <div class="card-menu-dropdown">
+          ${isMyRecipe ? '<button class="btn-delete-recipe"><i class="fas fa-trash-can"></i> Excluir Receita</button>' : ''}
+          <button class="btn-copy-link"><i class="fas fa-link"></i> Copiar Link</button>
+        </div>
       </div>
       ${imageHtml}
       <div class="card-content">
@@ -438,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p>${receita.modoPreparo || "Não informado."}</p>
           </div>
         </div>
-        <a class="toggle-recipe-link"><i class="fas fa-chevron-down"></i> Ver receita completa</a>
+        <a class="toggle-recipe-link"><i class="fas fa-book-open"></i> Ver receita completa</a>
       </div>
       <div class="card-actions">
         <div class="action-counts">
@@ -454,9 +555,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <i class="far fa-comment"></i>
             <span>Comentar</span>
           </button>
-          <button class="action-btn btn-share">
-            <i class="far fa-share-from-square"></i>
-            <span>Compartilhar</span>
+          <button class="action-btn btn-bookmark ${receita.bookmarkedByMe ? "bookmarked" : ""}">
+            <i class="fa${receita.bookmarkedByMe ? "s" : "r"} fa-bookmark"></i>
+            <span>${receita.bookmarkedByMe ? "Salvo" : "Salvar"}</span>
           </button>
         </div>
       </div>
@@ -470,20 +571,52 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // ===== EVENT: TOGGLE RECIPE =====
+    // ===== EVENT: OPEN FULL RECIPE MODAL =====
     const toggleLink = cardReceita.querySelector(".toggle-recipe-link");
-    const recipeDetails = cardReceita.querySelector(".recipe-details");
-    if (toggleLink && recipeDetails) {
+    const cardImageEl = cardReceita.querySelector(".card-image img");
+
+    if (toggleLink) {
       toggleLink.addEventListener("click", (e) => {
         e.preventDefault();
-        recipeDetails.classList.toggle("expanded");
-        if (recipeDetails.classList.contains("expanded")) {
-          toggleLink.innerHTML =
-            '<i class="fas fa-chevron-up"></i> Ocultar receita';
-        } else {
-          toggleLink.innerHTML =
-            '<i class="fas fa-chevron-down"></i> Ver receita completa';
+        abrirModalDetalhesReceita(receita);
+      });
+    }
+    if (cardImageEl) {
+      cardImageEl.addEventListener("click", () => abrirModalDetalhesReceita(receita));
+    }
+
+    // ===== EVENT: CARD 3-DOTS MENU =====
+    const menuBtn = cardReceita.querySelector(".card-menu-btn");
+    const menuDropdown = cardReceita.querySelector(".card-menu-dropdown");
+    if (menuBtn && menuDropdown) {
+      menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        document.querySelectorAll(".card-menu-dropdown.open").forEach((m) => {
+          if (m !== menuDropdown) m.classList.remove("open");
+        });
+        menuDropdown.classList.toggle("open");
+      });
+    }
+
+    const btnDelete = cardReceita.querySelector(".btn-delete-recipe");
+    if (btnDelete) {
+      btnDelete.addEventListener("click", () => {
+        if (confirm("Tem certeza que deseja excluir esta receita?")) {
+          const receitaId = parseInt(cardReceita.dataset.id);
+          deletarReceita(receitaId);
+          cardReceita.remove();
+          showToast("Receita excluída 🗑️", "info");
+          loadUserData();
         }
+      });
+    }
+
+    const btnCopyLink = cardReceita.querySelector(".btn-copy-link");
+    if (btnCopyLink) {
+      btnCopyLink.addEventListener("click", () => {
+        navigator.clipboard.writeText(window.location.href);
+        if (menuDropdown) menuDropdown.classList.remove("open");
+        showToast("Link da receita copiado! 📋", "info");
       });
     }
 
@@ -512,9 +645,35 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem("receitas", JSON.stringify(receitas));
           const count = receitas[idx].likes;
           likeCountEl.textContent = `${count} curtida${count !== 1 ? "s" : ""}`;
-
-          // Update profile stats
           loadUserData();
+        }
+      });
+    }
+
+    // ===== EVENT: BOOKMARK (SALVAR) =====
+    const btnBookmark = cardReceita.querySelector(".btn-bookmark");
+    if (btnBookmark) {
+      btnBookmark.addEventListener("click", () => {
+        const receitaId = parseInt(cardReceita.dataset.id);
+        const receitas = JSON.parse(localStorage.getItem("receitas")) || [];
+        const idx = receitas.findIndex((r) => r.id === receitaId);
+
+        if (idx !== -1) {
+          const isSaved = !!receitas[idx].bookmarkedByMe;
+          receitas[idx].bookmarkedByMe = !isSaved;
+          localStorage.setItem("receitas", JSON.stringify(receitas));
+
+          if (!isSaved) {
+            btnBookmark.classList.add("bookmarked");
+            btnBookmark.querySelector("i").className = "fas fa-bookmark";
+            btnBookmark.querySelector("span").textContent = "Salvo";
+            showToast("Receita salva nos seus favoritos! 🔖", "success");
+          } else {
+            btnBookmark.classList.remove("bookmarked");
+            btnBookmark.querySelector("i").className = "far fa-bookmark";
+            btnBookmark.querySelector("span").textContent = "Salvar";
+            showToast("Receita removida dos salvos", "info");
+          }
         }
       });
     }
@@ -556,7 +715,6 @@ document.addEventListener("DOMContentLoaded", () => {
         timestamp: new Date().toISOString(),
       };
 
-      // Save to localStorage
       const receitaId = parseInt(cardReceita.dataset.id);
       const receitas = JSON.parse(localStorage.getItem("receitas")) || [];
       const idx = receitas.findIndex((r) => r.id === receitaId);
@@ -569,35 +727,15 @@ document.addEventListener("DOMContentLoaded", () => {
         commentCountEl.textContent = `${count} comentário${count !== 1 ? "s" : ""}`;
       }
 
-      // Add to DOM
       addCommentToDOM(commentList, comment);
       commentInput.value = "";
-
-      // Auto-scroll to bottom
       commentList.scrollTop = commentList.scrollHeight;
     }
 
-    if (commentSendBtn) {
-      commentSendBtn.addEventListener("click", sendComment);
-    }
+    if (commentSendBtn) commentSendBtn.addEventListener("click", sendComment);
     if (commentInput) {
       commentInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") sendComment();
-      });
-    }
-
-    // ===== EVENT: SHARE =====
-    const btnShare = cardReceita.querySelector(".btn-share");
-    if (btnShare) {
-      btnShare.addEventListener("click", () => {
-        showToast("Link da receita copiado! 📋", "info");
-      });
-    }
-
-    // ===== EVENT: COMMENT COUNT CLICK =====
-    if (commentCountEl) {
-      commentCountEl.addEventListener("click", () => {
-        commentSection.classList.add("open");
       });
     }
 
@@ -657,18 +795,21 @@ document.addEventListener("DOMContentLoaded", () => {
     return then.toLocaleDateString("pt-BR");
   }
 
-  // ===== SAVE RECIPE =====
   function salvarReceita(receita) {
     let receitasStorage = JSON.parse(localStorage.getItem("receitas")) || [];
     receitasStorage.unshift(receita);
     localStorage.setItem("receitas", JSON.stringify(receitasStorage));
   }
 
-  // ===== LOAD RECIPES =====
-  function carregarReceitas() {
+  function deletarReceita(id) {
+    let receitasStorage = JSON.parse(localStorage.getItem("receitas")) || [];
+    receitasStorage = receitasStorage.filter((r) => r.id !== id);
+    localStorage.setItem("receitas", JSON.stringify(receitasStorage));
+  }
+
+  function carregarReceitas(filtro = "all") {
     let receitasSalvas = JSON.parse(localStorage.getItem("receitas")) || [];
 
-    // If first time, load example recipes
     if (receitasSalvas.length === 0) {
       receitasSalvas = getExampleRecipes();
       localStorage.setItem("receitas", JSON.stringify(receitasSalvas));
@@ -676,19 +817,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
     containerReceitas.innerHTML = "";
 
-    if (receitasSalvas.length === 0) {
+    let filtradas = [...receitasSalvas];
+
+    if (filtro === "em-alta") {
+      filtradas.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+    } else if (filtro === "salvos") {
+      filtradas = filtradas.filter((r) => !!r.bookmarkedByMe);
+    } else if (filtro === "recentes") {
+      filtradas.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    }
+
+    if (filtradas.length === 0) {
       if (feedEmpty) feedEmpty.style.display = "block";
       return;
     }
 
-    // Load in reverse order so prepend puts them in correct order
-    const reversed = [...receitasSalvas].reverse();
+    if (feedEmpty) feedEmpty.style.display = "none";
+
+    const reversed = [...filtradas].reverse();
     reversed.forEach((receita) => {
       if (receita && receita.titulo) {
         adicionarReceitaAoFeed(receita);
       }
     });
   }
+
+  // ===== SIDEBAR NAVIGATION LINKS =====
+  document.querySelectorAll(".sidebar-nav ul li a").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.querySelectorAll(".sidebar-nav ul li a").forEach((l) => l.classList.remove("active"));
+      link.classList.add("active");
+
+      const text = link.textContent.trim().toLowerCase();
+      if (text.includes("em alta")) {
+        carregarReceitas("em-alta");
+      } else if (text.includes("salvos")) {
+        carregarReceitas("salvos");
+      } else if (text.includes("recentes")) {
+        carregarReceitas("recentes");
+      } else {
+        carregarReceitas("all");
+      }
+    });
+  });
 
   // ===== EXAMPLE RECIPES =====
   function getExampleRecipes() {
@@ -708,6 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "https://images.pexels.com/photos/2105104/pexels-photo-2105104.jpeg?auto=compress&cs=tinysrgb&w=800",
         likes: 195,
         likedByMe: false,
+        bookmarkedByMe: false,
         comentarios: [
           {
             id: 1,
@@ -741,6 +914,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=800",
         likes: 324,
         likedByMe: false,
+        bookmarkedByMe: true,
         comentarios: [
           {
             id: 3,
@@ -767,6 +941,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "https://images.pexels.com/photos/6419701/pexels-photo-6419701.jpeg?auto=compress&cs=tinysrgb&w=800",
         likes: 167,
         likedByMe: false,
+        bookmarkedByMe: false,
         comentarios: [],
         timestamp: new Date(Date.now() - 172800000).toISOString(),
       },
@@ -782,10 +957,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       cards.forEach((card) => {
         const title = card.querySelector("h3")?.textContent.toLowerCase() || "";
-        const username =
-          card.querySelector(".username")?.textContent.toLowerCase() || "";
-        const cat =
-          card.querySelector(".categoria")?.textContent.toLowerCase() || "";
+        const username = card.querySelector(".username")?.textContent.toLowerCase() || "";
+        const cat = card.querySelector(".categoria")?.textContent.toLowerCase() || "";
 
         if (
           query === "" ||
@@ -851,14 +1024,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ===== KEYBOARD SHORTCUT: ESC to close modals & dropdowns =====
+  // ===== KEYBOARD SHORTCUT: ESC =====
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeModal(recipeModalOverlay);
       closeModal(profileModalOverlay);
       closeModal(settingsModalOverlay);
+      closeModal(recipeDetailModalOverlay);
       if (notificationsDropdown) notificationsDropdown.classList.remove("open");
       if (headerUserMenu) headerUserMenu.classList.remove("open");
+      document.querySelectorAll(".card-menu-dropdown.open").forEach((m) => m.classList.remove("open"));
     }
   });
 

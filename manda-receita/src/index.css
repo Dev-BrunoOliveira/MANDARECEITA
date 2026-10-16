@@ -210,7 +210,6 @@ body {
   font-size: 1em;
 }
 
-/* ===== FORM SECTION / RIGHT ===== */
 .form-section {
   flex: 1;
   display: flex;
@@ -491,7 +490,6 @@ body {
   line-height: 1.5;
 }
 
-/* ===== HEADER / NAVBAR ===== */
 #mainHeader {
   background: var(--bg-card);
   padding: 0 24px;
@@ -787,7 +785,6 @@ body {
   margin: 4px 0;
 }
 
-/* ===== MAIN LAYOUT ===== */
 main {
   display: grid;
   grid-template-columns: 300px 1fr 300px;
@@ -807,7 +804,6 @@ main {
   gap: 16px;
 }
 
-/* ===== PROFILE CARD ===== */
 .profile-card {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
